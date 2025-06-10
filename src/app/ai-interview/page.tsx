@@ -96,79 +96,307 @@ export default function AIInterviewPage() {
 
   const analyzeResponse = (response: string, stage: string): { score: number; feedback: string; suggestions: string[] } => {
     const wordCount = response.trim().split(/\s+/).length;
-    let score = 70; // Base score
-    
-    // Length analysis
-    if (wordCount < 20) score -= 20;
-    else if (wordCount > 200) score -= 10;
-    else if (wordCount >= 50 && wordCount <= 150) score += 15;
-    
-    // Content analysis based on stage
+    const sentences = response.split(/[.!?]+/).filter(s => s.trim().length > 0);
     const lowerResponse = response.toLowerCase();
     const suggestions: string[] = [];
-    let feedback = '';
-    
-    if (stage === 'introduction') {
-      if (lowerResponse.includes('experience') || lowerResponse.includes('background')) score += 10;
-      if (lowerResponse.includes('passion') || lowerResponse.includes('excited')) score += 5;
-      feedback = 'Good introduction. ';
-      if (wordCount < 30) suggestions.push('Try to provide more detail about your background');
-      if (!lowerResponse.includes('experience')) suggestions.push('Mention relevant experience');
-    } else if (stage === 'behavioral') {
-      if (lowerResponse.includes('situation') || lowerResponse.includes('challenge')) score += 10;
-      if (lowerResponse.includes('result') || lowerResponse.includes('outcome')) score += 10;
-      if (lowerResponse.includes('learned') || lowerResponse.includes('improved')) score += 5;
-      feedback = 'Nice behavioral example. ';
-      if (!lowerResponse.includes('result')) suggestions.push('Always mention the outcome or result');
-      if (wordCount < 40) suggestions.push('Provide more context and details');
-    } else if (stage === 'technical') {
-      if (lowerResponse.includes('approach') || lowerResponse.includes('solution')) score += 10;
-      if (lowerResponse.includes('consider') || lowerResponse.includes('alternative')) score += 5;
-      feedback = 'Solid technical thinking. ';
-      if (!lowerResponse.includes('because') && !lowerResponse.includes('reason')) {
-        suggestions.push('Explain your reasoning behind decisions');
+
+    // Start with base score
+    let score = 60;
+
+    // Length scoring (more nuanced)
+    if (wordCount < 10) {
+      score = 25;
+      suggestions.push('Your response is too brief. Provide much more detail and specific examples.');
+    } else if (wordCount < 25) {
+      score = 40;
+      suggestions.push('Expand your response with more specific details and examples.');
+    } else if (wordCount >= 30 && wordCount <= 120) {
+      score += 20; // Good length
+    } else if (wordCount > 200) {
+      score -= 10;
+      suggestions.push('Try to be more concise while maintaining key details.');
+    }
+
+    // Context-specific analysis
+    if (stage === 'greeting' || stage === 'introduction') {
+      // Analyze introduction quality
+      if (lowerResponse.includes('self-taught') || lowerResponse.includes('self taught')) {
+        score += 15;
+      }
+      if (lowerResponse.includes('full stack') || lowerResponse.includes('fullstack')) {
+        score += 10;
+      }
+
+      // Check if they mentioned experience/background
+      const hasExperience = lowerResponse.includes('experience') || lowerResponse.includes('background') ||
+                           lowerResponse.includes('student') || lowerResponse.includes('university') ||
+                           lowerResponse.includes('year') || lowerResponse.includes('major');
+      if (hasExperience) {
+        score += 10;
+      } else {
+        suggestions.push('Mention your relevant experience and background');
+      }
+
+      // Check for motivation/passion
+      const hasMotivation = lowerResponse.includes('passion') || lowerResponse.includes('motivated') ||
+                           lowerResponse.includes('love') || lowerResponse.includes('motivates') ||
+                           lowerResponse.includes('want') || lowerResponse.includes('enhance') ||
+                           lowerResponse.includes('improve') || lowerResponse.includes('girlfriend');
+      if (hasMotivation) {
+        score += 8;
+      } else {
+        suggestions.push('Show your passion and motivation for the field');
+      }
+
+      // Check for specific technologies or skills
+      const techKeywords = ['javascript', 'react', 'node', 'python', 'java', 'sql', 'mongodb', 'aws', 'git',
+                           'web developer', 'software engineer', 'computer science', 'technologies'];
+      const mentionedTech = techKeywords.filter(tech => lowerResponse.includes(tech));
+      if (mentionedTech.length > 0) {
+        score += mentionedTech.length * 3;
+      } else {
+        suggestions.push('Mention specific technologies or skills you have');
+      }
+
+      if (wordCount < 20) {
+        suggestions.push('Provide more detail about your journey and what drives you');
       }
     }
-    
-    // General improvements
-    if (wordCount < 25) suggestions.push('Elaborate more on your answer');
-    if (!lowerResponse.includes('i ')) suggestions.push('Use more first-person examples');
-    
-    score = Math.max(0, Math.min(100, score));
-    
-    return {
-      score,
-      feedback: feedback + `Your response demonstrates ${score >= 80 ? 'excellent' : score >= 60 ? 'good' : 'developing'} communication skills.`,
-      suggestions
-    };
+
+    if (stage === 'technical' || stage === 'introduction') {
+      // Technical response analysis - also applies to introduction if they mention projects
+      const hasProjects = lowerResponse.includes('project') || lowerResponse.includes('built') ||
+                         lowerResponse.includes('created') || lowerResponse.includes('developed') ||
+                         lowerResponse.includes('.com') || lowerResponse.includes('.live') ||
+                         lowerResponse.includes('platform') || lowerResponse.includes('website');
+
+      if (hasProjects) {
+        score += 20; // Big bonus for mentioning actual projects
+      }
+
+      // Check for specific project details
+      const projectDetails = ['syncrolly', 'typingy', 'andwatch', 'codeshare', 'typing race',
+                             'myanimelist', 'simultaneously', 'real-time', 'collaborative'];
+      const detailsMentioned = projectDetails.filter(detail => lowerResponse.includes(detail));
+      score += detailsMentioned.length * 5;
+
+      if (lowerResponse.includes('approach') || lowerResponse.includes('solution') || lowerResponse.includes('implement')) {
+        score += 15;
+      } else if (stage === 'technical') {
+        suggestions.push('Describe your approach or solution methodology');
+      }
+
+      if (lowerResponse.includes('because') || lowerResponse.includes('reason') || lowerResponse.includes('why')) {
+        score += 10;
+      } else if (stage === 'technical') {
+        suggestions.push('Explain your reasoning behind technical decisions');
+      }
+
+      if (lowerResponse.includes('performance') || lowerResponse.includes('optimize') || lowerResponse.includes('scale')) {
+        score += 12;
+      }
+
+      if (lowerResponse.includes('test') || lowerResponse.includes('debug') || lowerResponse.includes('error')) {
+        score += 8;
+      }
+
+      const techDepth = ['architecture', 'design pattern', 'algorithm', 'complexity', 'database', 'api',
+                        'real-time', 'websocket', 'socket.io', 'collaborative', 'synchronization'];
+      const depthMentioned = techDepth.filter(term => lowerResponse.includes(term));
+      score += depthMentioned.length * 5;
+
+      // Check for technical challenges mentioned
+      const challenges = ['challenging', 'difficult', 'hard', 'obstacle', 'problem', 'issue',
+                          'beginning', 'start', 'courses', 'learning', 'managed', 'overcome'];
+      const challengesMentioned = challenges.filter(challenge => lowerResponse.includes(challenge));
+      if (challengesMentioned.length > 0) {
+        score += 10;
+      }
+
+      // Bonus for mentioning learning journey and growth
+      const learningIndicators = ['courses', 'paid', 'learning', 'taught myself', 'self-taught',
+                                 'beginning', 'start', 'journey', 'managed', 'overcome'];
+      const learningMentioned = learningIndicators.filter(indicator => lowerResponse.includes(indicator));
+      score += learningMentioned.length * 3;
+    }
+
+    if (stage === 'behavioral') {
+      // STAR method analysis
+      const starComponents = {
+        situation: ['situation', 'context', 'when', 'where', 'background'].some(word => lowerResponse.includes(word)),
+        task: ['task', 'responsibility', 'goal', 'objective', 'needed to'].some(word => lowerResponse.includes(word)),
+        action: ['action', 'did', 'implemented', 'decided', 'approached'].some(word => lowerResponse.includes(word)),
+        result: ['result', 'outcome', 'achieved', 'improved', 'success'].some(word => lowerResponse.includes(word))
+      };
+
+      const starScore = Object.values(starComponents).filter(Boolean).length;
+      score += starScore * 8;
+
+      if (!starComponents.situation) suggestions.push('Set the context/situation more clearly');
+      if (!starComponents.task) suggestions.push('Explain your specific role and responsibilities');
+      if (!starComponents.action) suggestions.push('Describe the specific actions you took');
+      if (!starComponents.result) suggestions.push('Always mention the outcome or results');
+
+      if (lowerResponse.includes('learned') || lowerResponse.includes('grew') || lowerResponse.includes('improved')) {
+        score += 10;
+      } else {
+        suggestions.push('Mention what you learned from the experience');
+      }
+    }
+
+    if (stage === 'leadership') {
+      if (lowerResponse.includes('team') || lowerResponse.includes('led') || lowerResponse.includes('managed')) {
+        score += 15;
+      }
+      if (lowerResponse.includes('influence') || lowerResponse.includes('motivate') || lowerResponse.includes('inspire')) {
+        score += 12;
+      }
+      if (lowerResponse.includes('conflict') || lowerResponse.includes('challenge') || lowerResponse.includes('difficult')) {
+        score += 10;
+      }
+    }
+
+    // General quality indicators
+    if (sentences.length >= 3) {
+      score += 8;
+    } else {
+      suggestions.push('Structure your response with multiple supporting points');
+    }
+
+    // First-person examples
+    const firstPersonCount = (lowerResponse.match(/\bi\s/g) || []).length;
+    if (firstPersonCount >= 3) {
+      score += 8;
+    } else if (firstPersonCount === 0) {
+      suggestions.push('Use first-person examples ("I did...", "I learned...")');
+    }
+
+    // Specific examples and details
+    if (lowerResponse.includes('example') || lowerResponse.includes('instance') || lowerResponse.includes('specifically')) {
+      score += 10;
+    } else {
+      suggestions.push('Provide specific examples to illustrate your points');
+    }
+
+    // Numbers and metrics
+    if (/\d+/.test(response)) {
+      score += 8;
+    } else {
+      suggestions.push('Include quantifiable results when possible');
+    }
+
+    // Ensure score is within bounds
+    score = Math.max(20, Math.min(100, score));
+
+    // Generate contextual feedback and clean up suggestions
+    let feedback = '';
+    if (score >= 85) {
+      feedback = 'Excellent response! You provided detailed, specific examples with clear structure and strong communication.';
+      // Remove basic suggestions for excellent responses
+      const excellentSuggestions = suggestions.filter(s =>
+        !s.includes('Mention your relevant experience') &&
+        !s.includes('Show your passion') &&
+        !s.includes('Mention specific technologies') &&
+        !s.includes('Structure your response') &&
+        !s.includes('Provide specific examples')
+      );
+      return { score, feedback, suggestions: excellentSuggestions };
+    } else if (score >= 70) {
+      feedback = 'Good response with relevant details. With some refinements, this could be outstanding.';
+    } else if (score >= 55) {
+      feedback = 'Decent foundation, but your response needs more depth and specific examples.';
+    } else {
+      feedback = 'Your response needs significant development. Focus on providing detailed, specific examples.';
+    }
+
+    // Limit suggestions to most important ones
+    const prioritizedSuggestions = suggestions.slice(0, 3);
+
+    return { score, feedback, suggestions: prioritizedSuggestions };
   };
 
   const generateAIResponse = (userMessage: string, stage: string): string => {
-    const responses = AI_FARTE_RESPONSES.followUps[stage as keyof typeof AI_FARTE_RESPONSES.followUps] || AI_FARTE_RESPONSES.deepDive;
-
-    // Enhanced keyword-based response selection with context awareness
     const lowerMessage = userMessage.toLowerCase();
     const wordCount = userMessage.trim().split(/\s+/).length;
 
-    // AI Farte provides more sophisticated responses based on response quality
-    if (wordCount > 100) {
-      // Detailed response gets deeper follow-up
+    // Check if response is off-topic or too brief
+    if (wordCount < 5) {
+      return "I appreciate your response, but I'd love to hear more detail. Could you elaborate on that? I'm looking for specific examples and more context to better understand your experience.";
+    }
+
+    // Check for completely off-topic responses
+    const offTopicIndicators = ['weather', 'sports', 'food', 'movie', 'game', 'music', 'tv show', 'celebrity'];
+    const isOffTopic = offTopicIndicators.some(indicator => lowerMessage.includes(indicator));
+
+    if (isOffTopic) {
+      return "I appreciate you sharing that, but let's keep our conversation focused on your professional experience and career goals. Could you tell me more about your work background or a specific professional situation you've encountered?";
+    }
+
+    // Context-aware responses based on current stage and user input
+    if (stage === 'greeting' || stage === 'introduction') {
+      // Check if they mentioned specific projects
+      if (lowerMessage.includes('syncrolly') || lowerMessage.includes('typingy') || lowerMessage.includes('andwatch') ||
+          lowerMessage.includes('project')) {
+        return "Wow, those are some impressive projects! Syncrolly sounds like a sophisticated real-time collaboration platform - that must have involved some complex technical challenges around synchronization and concurrent editing. I'm particularly curious about the technical architecture. What technologies did you use for the real-time functionality, and what was the most difficult part of implementing simultaneous code editing? Also, how did you handle conflict resolution when multiple users edit the same code?";
+      }
+
+      if (lowerMessage.includes('self-taught') || lowerMessage.includes('self taught')) {
+        return "That's impressive - being self-taught shows real dedication and initiative. I'd love to dig deeper into your learning journey. What was the most challenging aspect of teaching yourself development, and how did you overcome those obstacles? Also, can you walk me through a specific project that really solidified your skills?";
+      }
+
+      if (lowerMessage.includes('full stack') || lowerMessage.includes('fullstack')) {
+        return "Full stack development is quite comprehensive! I'm curious about your technical depth. Which part of the stack do you feel most confident in, and can you describe a complex project where you had to work across the entire technology stack? What specific technologies did you use and what challenges did you face?";
+      }
+
+      if (lowerMessage.includes('student') || lowerMessage.includes('university')) {
+        return "Balancing university studies with self-taught development shows great time management and passion. How do you balance your formal CS education with your practical development work? Are there gaps between what you're learning academically versus what you need for real-world development?";
+      }
+
+      if (lowerMessage.includes('job') || lowerMessage.includes('career')) {
+        return "I understand you're looking for opportunities. Let me understand your goals better - what type of role are you targeting, and what specific impact do you want to make? Also, can you tell me about a project or experience that demonstrates you're ready for that next step?";
+      }
+
+      if (wordCount < 15) {
+        return "I'd love to hear more about your background. Can you walk me through your journey in more detail? What specific experiences have shaped your career path, and what drives your passion for technology?";
+      }
+
+      return "That's a great start! Now I want to understand your problem-solving approach. Can you describe a specific technical challenge you've faced recently? Walk me through how you identified the problem, your thought process for solving it, and the outcome.";
+    }
+
+    // Technical stage responses
+    if (stage === 'technical') {
+      if (lowerMessage.includes('react') || lowerMessage.includes('javascript') || lowerMessage.includes('node')) {
+        return "I can see you have experience with modern web technologies. Let me challenge you a bit - imagine you're building a feature that suddenly needs to handle 10x more traffic than expected. How would you approach optimizing performance, and what specific strategies would you implement?";
+      }
+
+      if (lowerMessage.includes('database') || lowerMessage.includes('sql') || lowerMessage.includes('mongodb')) {
+        return "Database experience is crucial. Here's a scenario: you notice your application is running slowly, and you suspect it's database-related. Walk me through your debugging process - what tools would you use, what metrics would you check, and how would you identify the bottleneck?";
+      }
+
+      return "That's solid technical thinking. Now let me ask you this - how do you stay current with rapidly evolving technology? Can you give me an example of a new technology you recently learned and how you applied it to solve a real problem?";
+    }
+
+    // Behavioral stage responses
+    if (stage === 'behavioral') {
+      if (lowerMessage.includes('team') || lowerMessage.includes('collaboration')) {
+        return "Team dynamics are so important. I want to understand your interpersonal skills better. Tell me about a time when you had to work with someone whose working style was completely different from yours. How did you adapt, and what was the outcome?";
+      }
+
+      if (lowerMessage.includes('challenge') || lowerMessage.includes('difficult')) {
+        return "I appreciate you sharing that challenge. Now I'm curious about your resilience and learning mindset. Looking back at that situation, what would you do differently today, and how has that experience influenced your approach to similar challenges?";
+      }
+
+      return "That shows good self-awareness. Let me explore your growth mindset - can you tell me about a time when you received constructive criticism? How did you handle it, and what specific changes did you make as a result?";
+    }
+
+    // Leadership stage responses
+    if (stage === 'leadership') {
+      return "Leadership skills are valuable at any level. Tell me about a time when you had to influence someone without having direct authority over them. What was the situation, and what strategies did you use to get buy-in?";
+    }
+
+    // Default responses based on quality
+    if (wordCount > 80) {
       return AI_FARTE_RESPONSES.deepDive[Math.floor(Math.random() * AI_FARTE_RESPONSES.deepDive.length)];
-    }
-
-    if (lowerMessage.includes('project') || lowerMessage.includes('built') || lowerMessage.includes('developed')) {
-      setInterviewStage('technical');
-      return AI_FARTE_RESPONSES.followUps.technical[Math.floor(Math.random() * AI_FARTE_RESPONSES.followUps.technical.length)];
-    }
-
-    if (lowerMessage.includes('team') || lowerMessage.includes('collaboration') || lowerMessage.includes('led') || lowerMessage.includes('managed')) {
-      setInterviewStage('leadership');
-      return AI_FARTE_RESPONSES.followUps.leadership[Math.floor(Math.random() * AI_FARTE_RESPONSES.followUps.leadership.length)];
-    }
-
-    if (lowerMessage.includes('challenge') || lowerMessage.includes('difficult') || lowerMessage.includes('problem') || lowerMessage.includes('conflict')) {
-      setInterviewStage('behavioral');
-      return AI_FARTE_RESPONSES.followUps.behavioral[Math.floor(Math.random() * AI_FARTE_RESPONSES.followUps.behavioral.length)];
     }
 
     if (questionCount >= 5) {
@@ -176,7 +404,8 @@ export default function AIInterviewPage() {
       return AI_FARTE_RESPONSES.closing[Math.floor(Math.random() * AI_FARTE_RESPONSES.closing.length)];
     }
 
-    return responses[Math.floor(Math.random() * responses.length)];
+    // Encourage more detail for short responses
+    return "I'd like to hear more detail about that. Can you provide a specific example and walk me through your thought process? I'm looking for concrete situations that demonstrate your skills and experience.";
   };
 
   const sendMessage = async () => {
@@ -208,10 +437,20 @@ export default function AIInterviewPage() {
       setIsTyping(false);
       setQuestionCount(prev => prev + 1);
       
-      // Progress interview stages
-      if (interviewStage === 'greeting') setInterviewStage('introduction');
-      else if (interviewStage === 'introduction' && questionCount >= 1) setInterviewStage('technical');
-      else if (interviewStage === 'technical' && questionCount >= 2) setInterviewStage('behavioral');
+      // Progress interview stages based on content and question count
+      if (interviewStage === 'greeting') {
+        setInterviewStage('introduction');
+      } else if (interviewStage === 'introduction' && questionCount >= 1) {
+        // Move to technical if they mentioned technical terms, otherwise behavioral
+        const lowerInput = currentInput.toLowerCase();
+        if (lowerInput.includes('project') || lowerInput.includes('code') || lowerInput.includes('develop')) {
+          setInterviewStage('technical');
+        } else {
+          setInterviewStage('behavioral');
+        }
+      } else if ((interviewStage === 'technical' || interviewStage === 'behavioral') && questionCount >= 3) {
+        setInterviewStage('leadership');
+      }
     }, 1500 + Math.random() * 1000);
   };
 
