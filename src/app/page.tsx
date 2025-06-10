@@ -1,31 +1,27 @@
 import Link from "next/link";
-import { Code, Brain, TrendingUp, Users, Clock, Award } from "lucide-react";
+import { Brain, MessageSquare, Zap, Target, Mic, Video } from "lucide-react";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">
       {/* Navigation */}
-      <nav className="bg-white shadow-sm">
+      <nav className="bg-white/80 backdrop-blur-md shadow-sm border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <div className="flex-shrink-0 flex items-center">
-                <Brain className="h-8 w-8 text-indigo-600" />
-                <span className="ml-2 text-xl font-bold text-gray-900">InterviewPrep</span>
+                <Brain className="h-8 w-8 text-purple-600" />
+                <span className="ml-2 text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                  AI InterviewPrep
+                </span>
               </div>
             </div>
             <div className="flex items-center space-x-4">
               <Link
-                href="/auth/signin"
-                className="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium"
+                href="/ai-interview"
+                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6 py-2 rounded-full text-sm font-medium transition-all duration-200 shadow-lg hover:shadow-xl"
               >
-                Sign In
-              </Link>
-              <Link
-                href="/auth/signup"
-                className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium"
-              >
-                Get Started
+                Start AI Interview
               </Link>
             </div>
           </div>
@@ -35,107 +31,128 @@ export default function Home() {
       {/* Hero Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
         <div className="text-center">
+          <div className="mb-8">
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-purple-100 text-purple-800 text-sm font-medium mb-4">
+              <Zap className="h-4 w-4 mr-2" />
+              Powered by Advanced AI
+            </div>
+          </div>
           <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-            <span className="block">Master Your</span>
-            <span className="block text-indigo-600">Technical Interviews</span>
+            <span className="block">Practice Interviews with</span>
+            <span className="block bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+              AI Interviewer
+            </span>
           </h1>
-          <p className="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-            Practice coding challenges and behavioral questions with AI-powered feedback.
-            Build confidence and land your dream job.
+          <p className="mt-3 max-w-2xl mx-auto text-base text-gray-600 sm:text-lg md:mt-5 md:text-xl">
+            Experience realistic interview scenarios with our AI interviewer. Get instant feedback,
+            practice behavioral questions, and build confidence for your next big opportunity.
           </p>
-          <div className="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
-            <div className="rounded-md shadow">
-              <Link
-                href="/dashboard"
-                className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10"
-              >
-                Start Practicing
-              </Link>
-            </div>
-            <div className="mt-3 rounded-md shadow sm:mt-0 sm:ml-3">
-              <Link
-                href="#features"
-                className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50 md:py-4 md:text-lg md:px-10"
-              >
-                Learn More
-              </Link>
-            </div>
+          <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/ai-interview"
+              className="inline-flex items-center px-8 py-4 border border-transparent text-base font-medium rounded-lg text-white bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+            >
+              <MessageSquare className="h-5 w-5 mr-2" />
+              Start AI Interview
+            </Link>
+            <Link
+              href="/practice"
+              className="inline-flex items-center px-8 py-4 border border-gray-300 text-base font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-all duration-200 shadow-md hover:shadow-lg"
+            >
+              <Target className="h-5 w-5 mr-2" />
+              Practice Mode
+            </Link>
           </div>
         </div>
       </div>
 
       {/* Features Section */}
-      <div id="features" className="py-16 bg-white">
+      <div className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-3xl font-extrabold text-gray-900">
-              Everything you need to ace your interview
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-extrabold text-gray-900 mb-4">
+              AI-Powered Interview Experience
             </h2>
-            <p className="mt-4 text-lg text-gray-500">
-              Comprehensive practice tools designed by industry experts
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Our advanced AI interviewer provides realistic interview scenarios with intelligent responses and feedback
             </p>
           </div>
 
-          <div className="mt-16">
-            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              <div className="text-center">
-                <div className="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white mx-auto">
-                  <Code className="h-6 w-6" />
-                </div>
-                <h3 className="mt-6 text-lg font-medium text-gray-900">Coding Challenges</h3>
-                <p className="mt-2 text-base text-gray-500">
-                  Practice with real interview questions from top tech companies.
-                  Built-in code editor with instant feedback.
-                </p>
-              </div>
-
-              <div className="text-center">
-                <div className="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white mx-auto">
-                  <Users className="h-6 w-6" />
-                </div>
-                <h3 className="mt-6 text-lg font-medium text-gray-900">Behavioral Questions</h3>
-                <p className="mt-2 text-base text-gray-500">
-                  Master the STAR method with guided practice on common behavioral interview questions.
-                </p>
-              </div>
-
-              <div className="text-center">
-                <div className="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
+              <div className="relative bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
+                <div className="flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-r from-purple-500 to-blue-500 text-white mx-auto mb-6">
                   <Brain className="h-6 w-6" />
                 </div>
-                <h3 className="mt-6 text-lg font-medium text-gray-900">AI Feedback</h3>
-                <p className="mt-2 text-base text-gray-500">
-                  Get intelligent feedback on your responses to improve your interview performance.
+                <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">Smart AI Interviewer</h3>
+                <p className="text-gray-600 text-center">
+                  Conversational AI that asks follow-up questions, provides realistic responses, and adapts to your answers
                 </p>
               </div>
+            </div>
 
-              <div className="text-center">
-                <div className="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white mx-auto">
-                  <TrendingUp className="h-6 w-6" />
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-teal-500 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
+              <div className="relative bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
+                <div className="flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-r from-green-500 to-teal-500 text-white mx-auto mb-6">
+                  <MessageSquare className="h-6 w-6" />
                 </div>
-                <h3 className="mt-6 text-lg font-medium text-gray-900">Progress Tracking</h3>
-                <p className="mt-2 text-base text-gray-500">
-                  Monitor your improvement with detailed analytics and performance metrics.
+                <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">Dynamic Conversations</h3>
+                <p className="text-gray-600 text-center">
+                  Real-time chat interface with contextual follow-ups and natural conversation flow
                 </p>
               </div>
+            </div>
 
-              <div className="text-center">
-                <div className="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white mx-auto">
-                  <Clock className="h-6 w-6" />
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
+              <div className="relative bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
+                <div className="flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 text-white mx-auto mb-6">
+                  <Target className="h-6 w-6" />
                 </div>
-                <h3 className="mt-6 text-lg font-medium text-gray-900">Timed Practice</h3>
-                <p className="mt-2 text-base text-gray-500">
-                  Simulate real interview conditions with time limits and pressure scenarios.
+                <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">Instant Feedback</h3>
+                <p className="text-gray-600 text-center">
+                  Get detailed analysis of your responses with improvement suggestions and scoring
                 </p>
               </div>
+            </div>
 
-              <div className="text-center">
-                <div className="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white mx-auto">
-                  <Award className="h-6 w-6" />
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-purple-500 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
+              <div className="relative bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
+                <div className="flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-r from-pink-500 to-purple-500 text-white mx-auto mb-6">
+                  <Mic className="h-6 w-6" />
                 </div>
-                <h3 className="mt-6 text-lg font-medium text-gray-900">Skill Assessment</h3>
-                <p className="mt-2 text-base text-gray-500">
-                  Identify your strengths and areas for improvement with comprehensive skill evaluation.
+                <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">Voice & Text Support</h3>
+                <p className="text-gray-600 text-center">
+                  Practice with both text and voice responses for a complete interview experience
+                </p>
+              </div>
+            </div>
+
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
+              <div className="relative bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
+                <div className="flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 text-white mx-auto mb-6">
+                  <Video className="h-6 w-6" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">Multiple Scenarios</h3>
+                <p className="text-gray-600 text-center">
+                  Technical, behavioral, and situational interview scenarios tailored to your field
+                </p>
+              </div>
+            </div>
+
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
+              <div className="relative bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
+                <div className="flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500 text-white mx-auto mb-6">
+                  <Zap className="h-6 w-6" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">Real-time Analysis</h3>
+                <p className="text-gray-600 text-center">
+                  Live performance tracking with confidence scoring and communication analysis
                 </p>
               </div>
             </div>
@@ -144,20 +161,31 @@ export default function Home() {
       </div>
 
       {/* CTA Section */}
-      <div className="bg-indigo-700">
-        <div className="max-w-2xl mx-auto text-center py-16 px-4 sm:py-20 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
-            <span className="block">Ready to ace your next interview?</span>
+      <div className="relative bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-700 overflow-hidden">
+        <div className="absolute inset-0 bg-black opacity-10"></div>
+        <div className="relative max-w-4xl mx-auto text-center py-20 px-4 sm:px-6 lg:px-8">
+          <h2 className="text-4xl font-extrabold text-white sm:text-5xl">
+            <span className="block">Ready to practice with AI?</span>
           </h2>
-          <p className="mt-4 text-lg leading-6 text-indigo-200">
-            Join thousands of developers who have improved their interview skills with InterviewPrep.
+          <p className="mt-6 text-xl text-purple-100 max-w-2xl mx-auto">
+            Experience the future of interview preparation. Our AI interviewer is waiting to help you succeed.
           </p>
-          <Link
-            href="/dashboard"
-            className="mt-8 w-full inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-indigo-50 sm:w-auto"
-          >
-            Start Your Free Practice
-          </Link>
+          <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/ai-interview"
+              className="inline-flex items-center px-8 py-4 border border-transparent text-lg font-medium rounded-lg text-purple-600 bg-white hover:bg-gray-50 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+            >
+              <Brain className="h-5 w-5 mr-2" />
+              Start AI Interview Now
+            </Link>
+            <Link
+              href="/practice"
+              className="inline-flex items-center px-8 py-4 border-2 border-white text-lg font-medium rounded-lg text-white hover:bg-white hover:text-purple-600 transition-all duration-200"
+            >
+              <Target className="h-5 w-5 mr-2" />
+              Practice Mode
+            </Link>
+          </div>
         </div>
       </div>
 
