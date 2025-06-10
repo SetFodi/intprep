@@ -1,22 +1,26 @@
+'use client';
+
 import Link from "next/link";
 import { Brain, MessageSquare, Zap, Target, Mic, Video } from "lucide-react";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">
+    <div className="min-h-screen">
       {/* Navigation */}
-      <nav className="bg-white/80 backdrop-blur-md shadow-sm border-b border-white/20">
+      <nav className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-sm border-b border-white/20 dark:border-gray-700/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <div className="flex-shrink-0 flex items-center">
-                <Brain className="h-8 w-8 text-purple-600" />
-                <span className="ml-2 text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                  AI InterviewPrep
+                <Brain className="h-8 w-8 text-purple-600 dark:text-purple-400" />
+                <span className="ml-2 text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-400 dark:to-blue-400 bg-clip-text text-transparent">
+                  AI Farte
                 </span>
               </div>
             </div>
             <div className="flex items-center space-x-4">
+              <ThemeToggle />
               <Link
                 href="/ai-interview"
                 className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6 py-2 rounded-full text-sm font-medium transition-all duration-200 shadow-lg hover:shadow-xl"
@@ -32,19 +36,19 @@ export default function Home() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
         <div className="text-center">
           <div className="mb-8">
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-purple-100 text-purple-800 text-sm font-medium mb-4">
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-200 text-sm font-medium mb-4">
               <Zap className="h-4 w-4 mr-2" />
               Powered by Advanced AI
             </div>
           </div>
-          <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
+          <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white sm:text-5xl md:text-6xl">
             <span className="block">Practice Interviews with</span>
-            <span className="block bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-              AI Interviewer
+            <span className="block bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-400 dark:to-blue-400 bg-clip-text text-transparent">
+              AI Farte
             </span>
           </h1>
-          <p className="mt-3 max-w-2xl mx-auto text-base text-gray-600 sm:text-lg md:mt-5 md:text-xl">
-            Experience realistic interview scenarios with our AI interviewer. Get instant feedback,
+          <p className="mt-3 max-w-2xl mx-auto text-base text-gray-700 dark:text-gray-200 sm:text-lg md:mt-5 md:text-xl">
+            Experience realistic interview scenarios with AI Farte, the most advanced AI interviewer. Get premium feedback,
             practice behavioral questions, and build confidence for your next big opportunity.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">

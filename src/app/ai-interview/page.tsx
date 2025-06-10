@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Brain, Send, Mic, MicOff, RotateCcw, Home, MessageSquare } from 'lucide-react';
+import ThemeToggle from '@/components/ThemeToggle';
 
 interface Message {
   id: string;
@@ -16,54 +17,56 @@ interface Message {
   };
 }
 
-const AI_RESPONSES = {
+const AI_FARTE_RESPONSES = {
   greeting: [
-    "Hello! I'm Alex, your AI interviewer. I'm excited to chat with you today. Let's start with something simple - could you tell me a bit about yourself and what brings you here?",
-    "Hi there! Welcome to your interview session. I'm here to help you practice and improve. Why don't we begin by having you introduce yourself?",
-    "Great to meet you! I'm your AI interviewer for today. Let's dive right in - can you walk me through your background and what you're looking for in your next role?"
+    "Hello! I'm AI Farte, your premium interview coach. I've analyzed thousands of successful interviews and I'm here to help you excel. Let's begin with a fundamental question - could you walk me through your professional journey and what specifically draws you to this type of role?",
+    "Welcome! I'm AI Farte, and I'll be conducting your interview simulation today. I use advanced behavioral analysis to provide insights that mirror real hiring manager perspectives. To start, I'd love to understand your background - what's your story, and what motivates you in your career?",
+    "Greetings! AI Farte here - your intelligent interview partner. I've been trained on successful interview patterns from top companies. Let's dive deep - tell me about yourself, but focus on the experiences that have shaped your professional identity and aspirations.",
+    "Hi there! I'm AI Farte, your AI interview specialist. I combine natural language processing with real-world hiring insights to give you the most realistic practice possible. Let's start with the classic opener - but I want you to think strategically about how you position yourself. What's your elevator pitch?"
   ],
   
   followUps: {
     introduction: [
-      "That's interesting! Can you tell me more about what specifically drew you to [field/role]?",
-      "I'd love to hear about a project you're particularly proud of. What made it special?",
-      "What would you say is your biggest strength, and can you give me an example of how it's helped you?",
-      "Tell me about a challenge you've faced recently and how you overcame it."
+      "Fascinating background! I'm particularly intrigued by [specific detail]. Let me dig deeper - can you walk me through a specific project or achievement that you feel truly showcases your capabilities? I want to understand not just what you did, but how you think.",
+      "That's a compelling narrative. Now, I'm curious about your decision-making process. Can you describe a time when you had to make a significant professional decision with limited information? How did you approach it?",
+      "Excellent foundation. I can see you have strong experience. Let me challenge you a bit - what would you say is your biggest professional weakness, and more importantly, how are you actively working to address it?",
+      "I appreciate that overview. Now let's get specific - tell me about a time when you failed at something important. What happened, what did you learn, and how did it change your approach going forward?"
     ],
-    
+
     technical: [
-      "That's a solid approach. How would you handle it if the requirements changed midway through?",
-      "Interesting solution. What would you do differently if you had to scale this for millions of users?",
-      "Good thinking. Can you walk me through how you would test this?",
-      "I like that approach. What alternatives did you consider, and why did you choose this one?"
+      "That's a thoughtful approach. Let me push you further - imagine you're presenting this solution to a skeptical CTO who's concerned about scalability and cost. How would you address their concerns and what trade-offs would you highlight?",
+      "Interesting perspective. Now, let's say this solution is in production and suddenly starts failing under load. Walk me through your debugging process - what's your systematic approach to identifying and resolving the issue?",
+      "I like your thinking. But here's a curveball - what if you had to implement this same solution with half the timeline and budget? How would you prioritize and what would you sacrifice?",
+      "Solid reasoning. Now, imagine you're mentoring a junior developer who proposed a completely different approach. How would you evaluate their solution and provide constructive feedback?"
     ],
-    
+
     behavioral: [
-      "That sounds like a challenging situation. How did the other team members react to your approach?",
-      "Great example. What did you learn from that experience that you still apply today?",
-      "That's impressive. If you faced a similar situation again, would you do anything differently?",
-      "Thank you for sharing that. How do you think that experience prepared you for this role?"
+      "That's a compelling example. I can see you handled it well. But let me probe deeper - what was going through your mind during the most challenging moment? How did you manage your own emotions while leading others?",
+      "Excellent story. Now I'm curious about the aftermath - how did you measure the success of your approach? And looking back, what would you do differently if you faced a similar situation today?",
+      "That demonstrates strong problem-solving skills. But I want to understand your interpersonal approach better - how did you ensure all stakeholders felt heard and valued throughout this process?",
+      "Great example of resilience. Now, tell me about the ripple effects - how did this experience influence your leadership style, and can you give me an example of how you've applied those lessons since?"
     ],
-    
+
     leadership: [
-      "That shows great leadership. How do you typically motivate team members who are struggling?",
-      "Excellent. Can you tell me about a time when you had to make a difficult decision that affected your team?",
-      "That's valuable experience. How do you handle conflicts within your team?",
-      "Good insight. What's your approach to giving feedback to team members?"
+      "That's insightful leadership thinking. Let me challenge you with a scenario - you have a high-performing team member who's becoming toxic to team morale. They deliver results but their attitude is affecting others. How do you handle this delicate situation?",
+      "Excellent approach. Now, imagine you're leading a team through a major organizational change that you personally disagree with. How do you maintain team morale and buy-in while staying authentic to your own values?",
+      "That shows emotional intelligence. Here's a tough one - you need to deliver disappointing news to your team (budget cuts, project cancellation, layoffs). How do you approach this conversation while maintaining trust and motivation?",
+      "Strong leadership philosophy. Let me test it - you have two equally qualified team members competing for a promotion, but you can only choose one. How do you make this decision and handle the aftermath with both individuals?"
     ]
   },
   
   deepDive: [
-    "Let's dig deeper into that. Can you walk me through your thought process step by step?",
-    "That's fascinating. What was the most challenging part of that situation?",
-    "I'm curious about the details. How did you measure the success of that initiative?",
-    "Can you elaborate on that? What specific actions did you take?"
+    "Let's dig deeper into that. I want to understand your cognitive process here - can you walk me through your thought process step by step? What frameworks or mental models did you use?",
+    "That's fascinating, and I can see the complexity involved. What was the most challenging part of that situation, and how did you know you were making the right decisions in real-time?",
+    "I'm curious about the metrics and impact. How did you measure the success of that initiative? What were the quantifiable outcomes, and how did you track progress along the way?",
+    "Can you elaborate on that? I want to understand the specifics - what exact actions did you take, what was your timeline, and how did you ensure accountability throughout the process?"
   ],
-  
+
   closing: [
-    "Thank you for those thoughtful responses. Do you have any questions about the role or our company?",
-    "This has been a great conversation. Is there anything else you'd like me to know about your experience?",
-    "I appreciate your time today. What questions do you have for me about what we've discussed?"
+    "This has been an excellent conversation - your responses show real depth of thinking and experience. Before we wrap up, I'm curious: what questions do you have about the role, the team dynamics, or the company culture?",
+    "I'm impressed by the thoughtfulness of your answers and the way you've structured your responses. Is there anything else about your experience or approach that you feel would be important for me to understand?",
+    "Thank you for such engaging and detailed responses. You've given me great insight into how you think and operate. What questions can I answer for you about what we've discussed or about next steps?",
+    "I appreciate the depth you've brought to this conversation. Your examples really demonstrate your capabilities well. Before we conclude, what would you like to know about the challenges and opportunities in this role?"
   ]
 };
 
@@ -77,8 +80,8 @@ export default function AIInterviewPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Start with AI greeting
-    const greeting = AI_RESPONSES.greeting[Math.floor(Math.random() * AI_RESPONSES.greeting.length)];
+    // Start with AI Farte greeting
+    const greeting = AI_FARTE_RESPONSES.greeting[Math.floor(Math.random() * AI_FARTE_RESPONSES.greeting.length)];
     setMessages([{
       id: '1',
       type: 'ai',
@@ -141,30 +144,38 @@ export default function AIInterviewPage() {
   };
 
   const generateAIResponse = (userMessage: string, stage: string): string => {
-    const responses = AI_RESPONSES.followUps[stage as keyof typeof AI_RESPONSES.followUps] || AI_RESPONSES.deepDive;
-    
-    // Simple keyword-based response selection
+    const responses = AI_FARTE_RESPONSES.followUps[stage as keyof typeof AI_FARTE_RESPONSES.followUps] || AI_FARTE_RESPONSES.deepDive;
+
+    // Enhanced keyword-based response selection with context awareness
     const lowerMessage = userMessage.toLowerCase();
-    
+    const wordCount = userMessage.trim().split(/\s+/).length;
+
+    // AI Farte provides more sophisticated responses based on response quality
+    if (wordCount > 100) {
+      // Detailed response gets deeper follow-up
+      return AI_FARTE_RESPONSES.deepDive[Math.floor(Math.random() * AI_FARTE_RESPONSES.deepDive.length)];
+    }
+
     if (lowerMessage.includes('project') || lowerMessage.includes('built') || lowerMessage.includes('developed')) {
-      return responses[Math.floor(Math.random() * responses.length)];
+      setInterviewStage('technical');
+      return AI_FARTE_RESPONSES.followUps.technical[Math.floor(Math.random() * AI_FARTE_RESPONSES.followUps.technical.length)];
     }
-    
-    if (lowerMessage.includes('team') || lowerMessage.includes('collaboration')) {
+
+    if (lowerMessage.includes('team') || lowerMessage.includes('collaboration') || lowerMessage.includes('led') || lowerMessage.includes('managed')) {
       setInterviewStage('leadership');
-      return AI_RESPONSES.followUps.leadership[Math.floor(Math.random() * AI_RESPONSES.followUps.leadership.length)];
+      return AI_FARTE_RESPONSES.followUps.leadership[Math.floor(Math.random() * AI_FARTE_RESPONSES.followUps.leadership.length)];
     }
-    
-    if (lowerMessage.includes('challenge') || lowerMessage.includes('difficult') || lowerMessage.includes('problem')) {
+
+    if (lowerMessage.includes('challenge') || lowerMessage.includes('difficult') || lowerMessage.includes('problem') || lowerMessage.includes('conflict')) {
       setInterviewStage('behavioral');
-      return AI_RESPONSES.followUps.behavioral[Math.floor(Math.random() * AI_RESPONSES.followUps.behavioral.length)];
+      return AI_FARTE_RESPONSES.followUps.behavioral[Math.floor(Math.random() * AI_FARTE_RESPONSES.followUps.behavioral.length)];
     }
-    
-    if (questionCount >= 4) {
+
+    if (questionCount >= 5) {
       setInterviewStage('closing');
-      return AI_RESPONSES.closing[Math.floor(Math.random() * AI_RESPONSES.closing.length)];
+      return AI_FARTE_RESPONSES.closing[Math.floor(Math.random() * AI_FARTE_RESPONSES.closing.length)];
     }
-    
+
     return responses[Math.floor(Math.random() * responses.length)];
   };
 
@@ -210,9 +221,9 @@ export default function AIInterviewPage() {
     setQuestionCount(0);
     setInterviewStage('greeting');
     
-    // Restart with greeting
+    // Restart with AI Farte greeting
     setTimeout(() => {
-      const greeting = AI_RESPONSES.greeting[Math.floor(Math.random() * AI_RESPONSES.greeting.length)];
+      const greeting = AI_FARTE_RESPONSES.greeting[Math.floor(Math.random() * AI_FARTE_RESPONSES.greeting.length)];
       setMessages([{
         id: '1',
         type: 'ai',
@@ -223,21 +234,22 @@ export default function AIInterviewPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">
+    <div className="min-h-screen">
       {/* Header */}
-      <div className="bg-white/80 backdrop-blur-md shadow-sm border-b border-white/20">
+      <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-sm border-b border-white/20 dark:border-gray-700/20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <Brain className="h-8 w-8 text-purple-600" />
-              <span className="ml-2 text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                AI Interview Session
+              <Brain className="h-8 w-8 text-purple-600 dark:text-purple-400" />
+              <span className="ml-2 text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-400 dark:to-blue-400 bg-clip-text text-transparent">
+                AI Farte Interview
               </span>
             </div>
             <div className="flex items-center space-x-4">
+              <ThemeToggle />
               <button
                 onClick={resetInterview}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+                className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
                 <RotateCcw className="h-4 w-4 mr-2" />
                 Reset
@@ -256,15 +268,15 @@ export default function AIInterviewPage() {
 
       {/* Chat Interface */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white rounded-2xl shadow-xl border border-white/20 overflow-hidden">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-white/20 dark:border-gray-700/20 overflow-hidden">
           {/* Chat Messages */}
-          <div className="h-96 overflow-y-auto p-6 space-y-4">
+          <div className="h-96 overflow-y-auto p-6 space-y-4 bg-gray-50 dark:bg-gray-900">
             {messages.map((message) => (
               <div key={message.id} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl ${
-                  message.type === 'user' 
-                    ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white' 
-                    : 'bg-gray-100 text-gray-800'
+                  message.type === 'user'
+                    ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white'
+                    : 'bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 shadow-md'
                 }`}>
                   <p className="text-sm">{message.content}</p>
                   {message.analysis && (
@@ -298,11 +310,11 @@ export default function AIInterviewPage() {
             
             {isTyping && (
               <div className="flex justify-start">
-                <div className="bg-gray-100 text-gray-800 px-4 py-3 rounded-2xl">
+                <div className="bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 px-4 py-3 rounded-2xl shadow-md">
                   <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                   </div>
                 </div>
               </div>
@@ -311,7 +323,7 @@ export default function AIInterviewPage() {
           </div>
 
           {/* Input Area */}
-          <div className="border-t border-gray-200 p-4">
+          <div className="border-t border-gray-200 dark:border-gray-600 p-4 bg-white dark:bg-gray-800">
             <div className="flex space-x-4">
               <div className="flex-1">
                 <textarea
@@ -319,7 +331,7 @@ export default function AIInterviewPage() {
                   onChange={(e) => setCurrentInput(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), sendMessage())}
                   placeholder="Type your response here... (Press Enter to send)"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                  className="form-textarea"
                   rows={3}
                 />
               </div>
