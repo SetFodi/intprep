@@ -14,6 +14,9 @@ module.exports = {
       animation: {
         'bounce': 'bounce 1s infinite',
       },
+      backdropBlur: {
+        'xs': '2px',
+      }
     },
   },
   plugins: [],
