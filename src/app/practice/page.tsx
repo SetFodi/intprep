@@ -152,10 +152,10 @@ export default function PracticePage() {
         {/* Scenario Selection */}
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
               Choose Your Practice Scenario
             </h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
               Select an interview type to practice with AI-powered feedback and realistic scenarios
             </p>
           </div>
@@ -170,20 +170,20 @@ export default function PracticePage() {
                   className="relative group cursor-pointer"
                 >
                   <div className={`absolute inset-0 bg-gradient-to-r ${scenario.color} rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-300`}></div>
-                  <div className="relative bg-white p-8 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 transform group-hover:-translate-y-1">
+                  <div className="relative bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 transform group-hover:-translate-y-1">
                     <div className={`flex items-center justify-center h-16 w-16 rounded-xl bg-gradient-to-r ${scenario.color} text-white mx-auto mb-6`}>
                       <IconComponent className="h-8 w-8" />
                     </div>
-                    
-                    <h3 className="text-2xl font-bold text-gray-900 mb-3 text-center">
+
+                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3 text-center">
                       {scenario.title}
                     </h3>
-                    
-                    <p className="text-gray-600 text-center mb-6">
+
+                    <p className="text-gray-600 dark:text-gray-300 text-center mb-6">
                       {scenario.description}
                     </p>
-                    
-                    <div className="flex items-center justify-between text-sm text-gray-500 mb-6">
+
+                    <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-6">
                       <div className="flex items-center">
                         <Clock className="h-4 w-4 mr-1" />
                         {scenario.duration}
@@ -237,7 +237,7 @@ export default function PracticePage() {
 
       {/* Practice Interface */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white rounded-2xl shadow-xl border border-white/20 overflow-hidden">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-white/20 dark:border-gray-700/20 overflow-hidden">
           {/* Progress */}
           <div className="bg-gradient-to-r from-purple-600 to-blue-600 p-6 text-white">
             <div className="flex items-center justify-between mb-4">
@@ -247,7 +247,7 @@ export default function PracticePage() {
               </div>
             </div>
             <div className="w-full bg-white/20 rounded-full h-2">
-              <div 
+              <div
                 className="bg-white h-2 rounded-full transition-all duration-300"
                 style={{ width: `${((currentQuestion + 1) / (scenario?.questions.length || 1)) * 100}%` }}
               ></div>
@@ -257,12 +257,12 @@ export default function PracticePage() {
           {/* Question */}
           <div className="p-8">
             <div className="mb-8">
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
                 {scenario?.questions[currentQuestion]}
               </h3>
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <p className="text-blue-800 text-sm">
-                  <strong>Tip:</strong> Use the STAR method (Situation, Task, Action, Result) to structure your response. 
+              <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
+                <p className="text-blue-800 dark:text-blue-200 text-sm">
+                  <strong>Tip:</strong> Use the STAR method (Situation, Task, Action, Result) to structure your response.
                   Be specific and provide concrete examples.
                 </p>
               </div>
@@ -270,16 +270,16 @@ export default function PracticePage() {
 
             {/* Response Area */}
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Your Response
               </label>
               <textarea
                 value={userResponse}
                 onChange={(e) => setUserResponse(e.target.value)}
                 placeholder="Type your response here... Remember to be specific and use examples."
-                className="w-full h-40 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                className="form-textarea"
               />
-              <div className="mt-2 text-sm text-gray-500">
+              <div className="mt-2 text-sm text-gray-500 dark:text-gray-400">
                 {userResponse.length} characters • {userResponse.trim().split(/\s+/).length} words
               </div>
             </div>

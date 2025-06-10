@@ -19,6 +19,7 @@ export default function ThemeToggle() {
   }, []);
 
   const toggleTheme = () => {
+    if (!mounted) return;
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
     localStorage.setItem('theme', newTheme);
@@ -28,7 +29,7 @@ export default function ThemeToggle() {
   // Don't render anything until mounted to avoid hydration mismatch
   if (!mounted) {
     return (
-      <div className="h-12 w-12 rounded-xl bg-gray-200 dark:bg-gray-700 animate-pulse" />
+      <div className="h-12 w-12 rounded-xl bg-gray-200 animate-pulse" />
     );
   }
 
