@@ -10,6 +10,9 @@
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
+    "@types/js-cookie": "^3.0.6",
+    "framer-motion": "^12.17.3",
+    "js-cookie": "^3.0.5",
     "lucide-react": "^0.513.0",
     "mongodb": "^6.17.0",
     "mongoose": "^8.15.1",

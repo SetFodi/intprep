@@ -1,0 +1,1 @@
+export type InterviewStage = 'introduction' | 'technical' | 'behavioral' | 'leadership' | 'closing'; 
