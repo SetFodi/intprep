@@ -25,17 +25,15 @@ export default function Dashboard() {
   });
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Navigation */}
-      <nav className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-sm border-b border-white/20 dark:border-gray-700/20">
+      <nav className="bg-white dark:bg-gray-800 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <div className="flex-shrink-0 flex items-center">
                 <Brain className="h-8 w-8 text-purple-600 dark:text-purple-400" />
-                <span className="ml-2 text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-400 dark:to-blue-400 bg-clip-text text-transparent">
-                  AI Farte
-                </span>
+                <span className="ml-2 text-xl font-bold text-gray-900 dark:text-white">InterviewPrep</span>
               </div>
               <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
                 <Link
@@ -46,13 +44,13 @@ export default function Dashboard() {
                 </Link>
                 <Link
                   href="/ai-interview"
-                  className="border-transparent text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                  className="border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
                 >
                   AI Interview
                 </Link>
                 <Link
                   href="/practice"
-                  className="border-transparent text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                  className="border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
                 >
                   Practice
                 </Link>
@@ -90,7 +88,7 @@ export default function Dashboard() {
 
         {/* Stats Grid */}
         <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="bg-white/80 backdrop-blur-sm overflow-hidden shadow-lg rounded-xl border border-white/20">
+          <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-lg rounded-xl border border-gray-200 dark:border-gray-700">
             <div className="p-6">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
@@ -100,10 +98,10 @@ export default function Dashboard() {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-600 truncate">
+                    <dt className="text-sm font-medium text-gray-600 dark:text-gray-300 truncate">
                       AI Interviews
                     </dt>
-                    <dd className="text-2xl font-bold text-gray-900">
+                    <dd className="text-2xl font-bold text-gray-900 dark:text-white">
                       {stats.aiInterviewsCompleted}
                     </dd>
                   </dl>
@@ -112,7 +110,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="bg-white/80 backdrop-blur-sm overflow-hidden shadow-lg rounded-xl border border-white/20">
+          <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-lg rounded-xl border border-gray-200 dark:border-gray-700">
             <div className="p-6">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
@@ -122,10 +120,10 @@ export default function Dashboard() {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-600 truncate">
+                    <dt className="text-sm font-medium text-gray-600 dark:text-gray-300 truncate">
                       Practice Sessions
                     </dt>
-                    <dd className="text-2xl font-bold text-gray-900">
+                    <dd className="text-2xl font-bold text-gray-900 dark:text-white">
                       {stats.practiceSessionsCompleted}
                     </dd>
                   </dl>
@@ -134,7 +132,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="bg-white/80 backdrop-blur-sm overflow-hidden shadow-lg rounded-xl border border-white/20">
+          <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-lg rounded-xl border border-gray-200 dark:border-gray-700">
             <div className="p-6">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
@@ -144,10 +142,10 @@ export default function Dashboard() {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-600 truncate">
+                    <dt className="text-sm font-medium text-gray-600 dark:text-gray-300 truncate">
                       Average Score
                     </dt>
-                    <dd className="text-2xl font-bold text-gray-900">
+                    <dd className="text-2xl font-bold text-gray-900 dark:text-white">
                       {stats.averageScore}%
                     </dd>
                   </dl>
@@ -156,7 +154,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="bg-white/80 backdrop-blur-sm overflow-hidden shadow-lg rounded-xl border border-white/20">
+          <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-lg rounded-xl border border-gray-200 dark:border-gray-700">
             <div className="p-6">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
@@ -166,10 +164,10 @@ export default function Dashboard() {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-600 truncate">
+                    <dt className="text-sm font-medium text-gray-600 dark:text-gray-300 truncate">
                       Streak Days
                     </dt>
-                    <dd className="text-2xl font-bold text-gray-900">
+                    <dd className="text-2xl font-bold text-gray-900 dark:text-white">
                       {stats.streakDays}
                     </dd>
                   </dl>
@@ -181,21 +179,21 @@ export default function Dashboard() {
 
         {/* Quick Actions */}
         <div className="mt-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8">Start Your Practice</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">Start Your Practice</h2>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <Link
               href="/ai-interview"
               className="relative group"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
-              <div className="relative bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 transform group-hover:-translate-y-1">
+              <div className="relative bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300 transform group-hover:-translate-y-1">
                 <div className="flex items-center justify-center h-16 w-16 rounded-xl bg-gradient-to-r from-purple-500 to-blue-500 text-white mx-auto mb-6">
                   <Brain className="h-8 w-8" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3 text-center">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 text-center">
                   AI Interview Session
                 </h3>
-                <p className="text-gray-600 text-center mb-6">
+                <p className="text-gray-600 dark:text-gray-300 text-center mb-6">
                   Have a realistic conversation with our AI interviewer. Get dynamic questions and instant feedback.
                 </p>
                 <div className="text-center">
@@ -212,14 +210,14 @@ export default function Dashboard() {
               className="relative group"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-teal-500 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
-              <div className="relative bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 transform group-hover:-translate-y-1">
+              <div className="relative bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300 transform group-hover:-translate-y-1">
                 <div className="flex items-center justify-center h-16 w-16 rounded-xl bg-gradient-to-r from-green-500 to-teal-500 text-white mx-auto mb-6">
                   <Target className="h-8 w-8" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3 text-center">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 text-center">
                   Practice Mode
                 </h3>
-                <p className="text-gray-600 text-center mb-6">
+                <p className="text-gray-600 dark:text-gray-300 text-center mb-6">
                   Choose specific interview scenarios and practice with structured feedback and scoring.
                 </p>
                 <div className="text-center">
@@ -235,9 +233,9 @@ export default function Dashboard() {
 
         {/* Recent Activity */}
         <div className="mt-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Recent Activity</h2>
-          <div className="bg-white/80 backdrop-blur-sm shadow-lg overflow-hidden rounded-xl border border-white/20">
-            <ul className="divide-y divide-gray-200">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Recent Activity</h2>
+          <div className="bg-white dark:bg-gray-800 shadow-lg overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700">
+            <ul className="divide-y divide-gray-200 dark:divide-gray-700">
               <li className="px-6 py-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
@@ -245,11 +243,11 @@ export default function Dashboard() {
                       <Brain className="h-5 w-5 text-white" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-900">AI Interview Session</p>
-                      <p className="text-sm text-gray-500">Behavioral questions • Score: 87%</p>
+                      <p className="text-sm font-medium text-gray-900 dark:text-white">AI Interview Session</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Behavioral questions • Score: 87%</p>
                     </div>
                   </div>
-                  <div className="text-sm text-gray-500">2 hours ago</div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">2 hours ago</div>
                 </div>
               </li>
               <li className="px-6 py-4">
@@ -259,11 +257,11 @@ export default function Dashboard() {
                       <Target className="h-5 w-5 text-white" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-900">Leadership Practice</p>
-                      <p className="text-sm text-gray-500">Completed 5 questions • Score: 82%</p>
+                      <p className="text-sm font-medium text-gray-900 dark:text-white">Leadership Practice</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Completed 5 questions • Score: 82%</p>
                     </div>
                   </div>
-                  <div className="text-sm text-gray-500">1 day ago</div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">1 day ago</div>
                 </div>
               </li>
               <li className="px-6 py-4">
@@ -273,11 +271,11 @@ export default function Dashboard() {
                       <MessageSquare className="h-5 w-5 text-white" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-900">Technical Interview</p>
-                      <p className="text-sm text-gray-500">System design questions • Score: 79%</p>
+                      <p className="text-sm font-medium text-gray-900 dark:text-white">Technical Interview</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">System design questions • Score: 79%</p>
                     </div>
                   </div>
-                  <div className="text-sm text-gray-500">2 days ago</div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">2 days ago</div>
                 </div>
               </li>
               <li className="px-6 py-4">
@@ -287,11 +285,11 @@ export default function Dashboard() {
                       <Brain className="h-5 w-5 text-white" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-900">AI Interview Session</p>
-                      <p className="text-sm text-gray-500">Mixed scenarios • Score: 85%</p>
+                      <p className="text-sm font-medium text-gray-900 dark:text-white">AI Interview Session</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Mixed scenarios • Score: 85%</p>
                     </div>
                   </div>
-                  <div className="text-sm text-gray-500">3 days ago</div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">3 days ago</div>
                 </div>
               </li>
             </ul>
