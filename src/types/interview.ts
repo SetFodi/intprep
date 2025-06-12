@@ -1,1 +1,1 @@
-export type InterviewStage = 'introduction' | 'technical' | 'behavioral' | 'leadership' | 'closing'; 
+export type InterviewStage = 'greeting' | 'introduction' | 'technical' | 'behavioral' | 'leadership' | 'closing'; 

@@ -1,18 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import { Inter } from 'next/font/google';
+import Providers from '@/components/Providers';
 import Navigation from "@/components/Navigation";
 import { AuthProvider } from "@/contexts/AuthContext";
+import './globals.css';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: "AI Farte - Premium Interview Practice",
@@ -21,22 +14,24 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-purple-900 dark:to-indigo-900 transition-colors duration-300`}
+        className={`antialiased bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-purple-900 dark:to-indigo-900 transition-colors duration-300 ${inter.className}`}
       >
-        <AuthProvider>
-          <div className="flex min-h-screen">
-            <Navigation />
-            <main className="flex-1 ml-64">
-              {children}
-            </main>
-          </div>
-        </AuthProvider>
+        <Providers>
+          <AuthProvider>
+            <div className="flex min-h-screen">
+              <Navigation />
+              <main className="flex-1 ml-64">
+                {children}
+              </main>
+            </div>
+          </AuthProvider>
+        </Providers>
       </body>
     </html>
   );

@@ -11,12 +11,15 @@
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
     "@types/js-cookie": "^3.0.6",
+    "@types/next-auth": "^3.13.0",
     "framer-motion": "^12.17.3",
+    "geist": "^1.4.2",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.513.0",
     "mongodb": "^6.17.0",
     "mongoose": "^8.15.1",
     "next": "15.3.3",
+    "next-auth": "^4.24.11",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "recharts": "^2.15.3"

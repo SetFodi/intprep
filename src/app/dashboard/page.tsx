@@ -1,28 +1,72 @@
 'use client';
 
-import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Brain, MessageSquare, Target, TrendingUp, Clock, Award, Zap, Play } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
 
 interface UserStats {
-  aiInterviewsCompleted: number;
-  practiceSessionsCompleted: number;
-  averageScore: number;
+  totalInterviews: number;
+  totalPracticeSessions: number;
   totalTimeSpent: number;
-  streakDays: number;
-  lastActivity: Date;
+  averageScore: number;
+  currentStreak: number;
+}
+
+interface RecentActivity {
+  _id: string;
+  type: string;
+  category: string;
+  score?: number;
+  duration?: number;
+  details?: string;
+  createdAt: string;
 }
 
 export default function Dashboard() {
-  const [stats, setStats] = useState<UserStats>({
-    aiInterviewsCompleted: 7,
-    practiceSessionsCompleted: 15,
-    averageScore: 82,
-    totalTimeSpent: 180, // minutes
-    streakDays: 3,
-    lastActivity: new Date(),
-  });
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const [stats, setStats] = useState<UserStats | null>(null);
+  const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/auth/login');
+    }
+  }, [status, router]);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const response = await fetch('/api/user/stats');
+        if (!response.ok) {
+          throw new Error('Failed to fetch dashboard data');
+        }
+        const data = await response.json();
+        setStats(data.stats);
+        setRecentActivity(data.recentActivity);
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (status === 'authenticated') {
+      fetchDashboardData();
+    }
+  }, [status]);
+
+  if (status === 'loading' || loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -102,7 +146,7 @@ export default function Dashboard() {
                       AI Interviews
                     </dt>
                     <dd className="text-2xl font-bold text-gray-900 dark:text-white">
-                      {stats.aiInterviewsCompleted}
+                      {stats?.totalInterviews || 0}
                     </dd>
                   </dl>
                 </div>
@@ -124,7 +168,7 @@ export default function Dashboard() {
                       Practice Sessions
                     </dt>
                     <dd className="text-2xl font-bold text-gray-900 dark:text-white">
-                      {stats.practiceSessionsCompleted}
+                      {stats?.totalPracticeSessions || 0}
                     </dd>
                   </dl>
                 </div>
@@ -146,7 +190,7 @@ export default function Dashboard() {
                       Average Score
                     </dt>
                     <dd className="text-2xl font-bold text-gray-900 dark:text-white">
-                      {stats.averageScore}%
+                      {stats?.averageScore ? `${Math.round(stats.averageScore)}%` : '0%'}
                     </dd>
                   </dl>
                 </div>
@@ -168,7 +212,7 @@ export default function Dashboard() {
                       Streak Days
                     </dt>
                     <dd className="text-2xl font-bold text-gray-900 dark:text-white">
-                      {stats.streakDays}
+                      {stats?.currentStreak || 0}
                     </dd>
                   </dl>
                 </div>
@@ -236,62 +280,28 @@ export default function Dashboard() {
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Recent Activity</h2>
           <div className="bg-white dark:bg-gray-800 shadow-lg overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700">
             <ul className="divide-y divide-gray-200 dark:divide-gray-700">
-              <li className="px-6 py-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <div className="p-2 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg mr-4">
-                      <Brain className="h-5 w-5 text-white" />
+              {recentActivity.map((activity) => (
+                <li key={activity._id} className="px-6 py-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <div className="p-2 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg mr-4">
+                        <Brain className="h-5 w-5 text-white" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-900 dark:text-white capitalize">
+                          {activity.type.replace('_', ' ')}
+                        </p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          {activity.category}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900 dark:text-white">AI Interview Session</p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Behavioral questions • Score: 87%</p>
-                    </div>
-                  </div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">2 hours ago</div>
-                </div>
-              </li>
-              <li className="px-6 py-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <div className="p-2 bg-gradient-to-r from-green-500 to-teal-500 rounded-lg mr-4">
-                      <Target className="h-5 w-5 text-white" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900 dark:text-white">Leadership Practice</p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Completed 5 questions • Score: 82%</p>
+                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                      {new Date(activity.createdAt).toLocaleDateString()}
                     </div>
                   </div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">1 day ago</div>
-                </div>
-              </li>
-              <li className="px-6 py-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <div className="p-2 bg-gradient-to-r from-orange-500 to-red-500 rounded-lg mr-4">
-                      <MessageSquare className="h-5 w-5 text-white" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900 dark:text-white">Technical Interview</p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">System design questions • Score: 79%</p>
-                    </div>
-                  </div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">2 days ago</div>
-                </div>
-              </li>
-              <li className="px-6 py-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <div className="p-2 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg mr-4">
-                      <Brain className="h-5 w-5 text-white" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900 dark:text-white">AI Interview Session</p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Mixed scenarios • Score: 85%</p>
-                    </div>
-                  </div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">3 days ago</div>
-                </div>
-              </li>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
