@@ -108,52 +108,114 @@ function analyzeResponse(
   const improvements: string[] = [];
   const lowerResponse = response.toLowerCase();
 
-  // STAR method analysis
-  if (starComponents.situation) strengths.push('Clearly sets the context and situation');
-  if (starComponents.task) strengths.push('Defines responsibilities and objectives well');
-  if (starComponents.action) strengths.push('Describes specific actions taken');
-  if (starComponents.result) strengths.push('Mentions outcomes and results');
+  // STAR method analysis with weighted scoring
+  const starScores = {
+    situation: starComponents.situation ? 25 : 0,
+    task: starComponents.task ? 25 : 0,
+    action: starComponents.action ? 30 : 0,
+    result: starComponents.result ? 20 : 0
+  };
 
-  if (!starComponents.situation) improvements.push('Start by setting the context or situation');
-  if (!starComponents.task) improvements.push('Clarify your specific role and responsibilities');
-  if (!starComponents.action) improvements.push('Describe the specific actions you took');
-  if (!starComponents.result) improvements.push('Always conclude with the outcome or impact');
-
-  // Length and structure analysis
-  if (wordCount >= 80 && wordCount <= 200) {
-    strengths.push('Appropriate response length - detailed yet concise');
-  } else if (wordCount < 50) {
-    improvements.push('Provide more detail and specific examples');
-  } else if (wordCount > 250) {
-    improvements.push('Try to be more concise while keeping key details');
+  const totalStarScore = Object.values(starScores).reduce((a, b) => a + b, 0);
+  
+  if (totalStarScore >= 80) {
+    strengths.push('Excellent STAR method implementation');
+  } else if (totalStarScore >= 60) {
+    strengths.push('Good STAR method structure');
   }
 
-  if (sentenceCount >= 4) {
-    strengths.push('Well-structured with multiple supporting points');
+  // Detailed STAR feedback
+  if (starComponents.situation) {
+    strengths.push('Clearly sets the context and situation');
+    if (lowerResponse.includes('when') || lowerResponse.includes('where')) {
+      strengths.push('Provides specific time and place context');
+    }
+  } else {
+    improvements.push('Start by setting the context or situation');
+  }
+
+  if (starComponents.task) {
+    strengths.push('Defines responsibilities and objectives well');
+    if (lowerResponse.includes('goal') || lowerResponse.includes('objective')) {
+      strengths.push('Clearly states goals and objectives');
+    }
+  } else {
+    improvements.push('Clarify your specific role and responsibilities');
+  }
+
+  if (starComponents.action) {
+    strengths.push('Describes specific actions taken');
+    if (lowerResponse.includes('i ') && lowerResponse.split('i ').length > 3) {
+      strengths.push('Uses strong first-person action verbs');
+    }
+  } else {
+    improvements.push('Describe the specific actions you took');
+  }
+
+  if (starComponents.result) {
+    strengths.push('Mentions outcomes and results');
+    if (/\d+/.test(response)) {
+      strengths.push('Includes quantifiable results and metrics');
+    }
+  } else {
+    improvements.push('Always conclude with the outcome or impact');
+  }
+
+  // Enhanced length and structure analysis
+  if (wordCount >= 100 && wordCount <= 250) {
+    strengths.push('Optimal response length - detailed yet concise');
+  } else if (wordCount < 75) {
+    improvements.push('Provide more detail and specific examples');
+  } else if (wordCount > 300) {
+    improvements.push('Consider being more concise while keeping key details');
+  }
+
+  // Sentence structure analysis
+  const sentences = response.split(/[.!?]+/).filter(s => s.trim().length > 0);
+  const avgSentenceLength = sentences.reduce((acc, curr) => acc + curr.length, 0) / sentences.length;
+  
+  if (sentenceCount >= 4 && avgSentenceLength >= 15 && avgSentenceLength <= 25) {
+    strengths.push('Well-structured with balanced sentence length');
   } else if (sentenceCount < 3) {
     improvements.push('Expand your response with more supporting details');
+  } else if (avgSentenceLength > 30) {
+    improvements.push('Consider breaking down longer sentences for clarity');
   }
 
-  // Category-specific analysis
+  // Communication quality metrics
+  const actionVerbs = ['implemented', 'developed', 'created', 'led', 'managed', 'improved', 'solved', 'achieved'];
+  const usedActionVerbs = actionVerbs.filter(verb => lowerResponse.includes(verb));
+  
+  if (usedActionVerbs.length >= 3) {
+    strengths.push('Uses strong action verbs effectively');
+  } else {
+    improvements.push('Incorporate more action verbs to demonstrate impact');
+  }
+
+  // Quantifiable results analysis
+  const numbers = response.match(/\d+/g) || [];
+  if (numbers.length >= 2) {
+    strengths.push('Includes multiple quantifiable metrics');
+  } else if (numbers.length === 1) {
+    strengths.push('Includes one quantifiable metric');
+  } else {
+    improvements.push('Add specific numbers or metrics to strengthen your response');
+  }
+
+  // Category-specific analysis with enhanced feedback
   const categoryFeedback = getAdvancedCategoryFeedback(category, lowerResponse);
   strengths.push(...categoryFeedback.strengths);
   improvements.push(...categoryFeedback.improvements);
 
-  // Communication quality
-  if (lowerResponse.includes('i ') && lowerResponse.split('i ').length > 3) {
-    strengths.push('Uses first-person examples effectively');
-  } else {
-    improvements.push('Use more personal examples with "I" statements');
-  }
+  // Remove duplicate feedback
+  const uniqueStrengths = [...new Set(strengths)];
+  const uniqueImprovements = [...new Set(improvements)];
 
-  // Quantifiable results
-  if (/\d+/.test(response)) {
-    strengths.push('Includes quantifiable results and metrics');
-  } else {
-    improvements.push('Consider adding specific numbers or metrics when possible');
-  }
-
-  return { strengths, improvements };
+  return { 
+    strengths: uniqueStrengths, 
+    improvements: uniqueImprovements,
+    starScore: totalStarScore
+  };
 }
 
 function getAdvancedCategoryFeedback(category: string, lowerResponse: string) {

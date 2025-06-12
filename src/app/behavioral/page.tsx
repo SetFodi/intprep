@@ -4,7 +4,12 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Brain, Users, Clock, Send, RotateCcw, Star, TrendingUp, MessageSquare } from 'lucide-react';
 import { generateAIFeedback } from '@/utils/aiFeedback';
-import { AIFeedback } from '@/types';
+
+interface AIFeedback {
+  strengths: string[];
+  improvements: string[];
+  starScore: number;
+}
 
 const sampleQuestions = [
   {
@@ -270,86 +275,78 @@ export default function BehavioralPage() {
 
                 {/* AI Feedback */}
                 {feedback && (
-                  <div className="mt-6 space-y-6">
-                    <div className="border-t pt-6">
-                      <h4 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
-                        <Brain className="h-5 w-5 mr-2 text-indigo-600" />
-                        AI Feedback (Beta)
-                      </h4>
-                      
-                      {/* Score */}
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                        <div className="bg-gray-50 p-4 rounded-lg text-center">
-                          <div className={`text-2xl font-bold ${
-                            feedback.score >= 80 ? 'text-green-600' :
-                            feedback.score >= 60 ? 'text-yellow-600' : 'text-red-600'
+                  <div className="mt-6 bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div className="p-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-lg font-semibold text-gray-900">AI Analysis</h3>
+                        <div className="flex items-center space-x-2">
+                          <div className="text-sm text-gray-500">STAR Score:</div>
+                          <div className={`px-3 py-1 rounded-full text-sm font-medium ${
+                            feedback?.starScore >= 80 ? 'bg-green-100 text-green-800' :
+                            feedback?.starScore >= 60 ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-red-100 text-red-800'
                           }`}>
-                            {feedback.score}
+                            {feedback?.starScore || 0}/100
                           </div>
-                          <div className="text-sm text-gray-600">Overall Score</div>
-                        </div>
-                        <div className="bg-gray-50 p-4 rounded-lg text-center">
-                          <div className="text-lg font-medium text-gray-900">
-                            {feedback.lengthAnalysis}
-                          </div>
-                          <div className="text-sm text-gray-600">Length Analysis</div>
-                        </div>
-                        <div className="bg-gray-50 p-4 rounded-lg text-center">
-                          <div className={`text-lg font-medium ${feedback.starMethodUsed ? 'text-green-600' : 'text-red-600'}`}>
-                            {feedback.starMethodUsed ? 'Yes' : 'No'}
-                          </div>
-                          <div className="text-sm text-gray-600">STAR Method Used</div>
                         </div>
                       </div>
 
-                      {/* Overall Feedback */}
-                      <div className="mb-6">
-                        <h5 className="text-sm font-medium text-gray-900 mb-2">Overall Feedback</h5>
-                        <p className="text-gray-700 text-sm">{feedback.overallFeedback}</p>
-                      </div>
-
-                      {/* Strengths */}
-                      {feedback.strengths.length > 0 && (
-                        <div className="mb-6">
-                          <h5 className="text-sm font-medium text-gray-900 mb-2 flex items-center">
-                            <TrendingUp className="h-4 w-4 mr-1 text-green-500" />
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Strengths */}
+                        <div className="bg-green-50 rounded-lg p-4">
+                          <h4 className="text-sm font-medium text-green-800 mb-3 flex items-center">
+                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                            </svg>
                             Strengths
-                          </h5>
-                          <ul className="space-y-1">
-                            {feedback.strengths.map((strength, index) => (
+                          </h4>
+                          <ul className="space-y-2">
+                            {feedback?.strengths.map((strength, index) => (
                               <li key={index} className="text-sm text-green-700 flex items-start">
-                                <span className="inline-block w-1.5 h-1.5 bg-green-500 rounded-full mt-2 mr-2 flex-shrink-0"></span>
+                                <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-500 mt-1.5 mr-2"></span>
                                 {strength}
                               </li>
                             ))}
                           </ul>
                         </div>
-                      )}
 
-                      {/* Improvements */}
-                      {feedback.improvements.length > 0 && (
-                        <div>
-                          <h5 className="text-sm font-medium text-gray-900 mb-2 flex items-center">
-                            <MessageSquare className="h-4 w-4 mr-1 text-blue-500" />
+                        {/* Areas for Improvement */}
+                        <div className="bg-blue-50 rounded-lg p-4">
+                          <h4 className="text-sm font-medium text-blue-800 mb-3 flex items-center">
+                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
                             Areas for Improvement
-                          </h5>
-                          <ul className="space-y-1">
-                            {feedback.improvements.map((improvement, index) => (
+                          </h4>
+                          <ul className="space-y-2">
+                            {feedback?.improvements.map((improvement, index) => (
                               <li key={index} className="text-sm text-blue-700 flex items-start">
-                                <span className="inline-block w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 mr-2 flex-shrink-0"></span>
+                                <span className="inline-block w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5 mr-2"></span>
                                 {improvement}
                               </li>
                             ))}
                           </ul>
                         </div>
-                      )}
+                      </div>
 
-                      {/* Time Spent */}
-                      {timeSpent > 0 && (
-                        <div className="mt-4 text-sm text-gray-500">
-                          Time spent: {formatTime(timeSpent)}
+                      {/* Tips for Next Time */}
+                      <div className="mt-6 bg-purple-50 rounded-lg p-4">
+                        <h4 className="text-sm font-medium text-purple-800 mb-3 flex items-center">
+                          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          Tips for Next Time
+                        </h4>
+                        <div className="text-sm text-purple-700">
+                          <p className="mb-2">Remember to:</p>
+                          <ul className="list-disc list-inside space-y-1">
+                            <li>Use specific examples and metrics</li>
+                            <li>Structure your response using the STAR method</li>
+                            <li>Focus on your personal actions and impact</li>
+                            <li>Keep responses concise but detailed</li>
+                          </ul>
                         </div>
-                      )}
+                      </div>
                     </div>
                   </div>
                 )}

@@ -54,12 +54,9 @@ export interface UserProgress {
 }
 
 export interface AIFeedback {
-  score: number;
+  starScore: number;
   strengths: string[];
   improvements: string[];
-  starMethodUsed: boolean;
-  lengthAnalysis: 'Too Short' | 'Good Length' | 'Too Long';
-  overallFeedback: string;
 }
 
 export interface UserStats {
