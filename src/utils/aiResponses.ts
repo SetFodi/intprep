@@ -10,9 +10,7 @@ Here, provide a concise summary that reflects your reasoning and presents a clea
 type InterviewStage = 'greeting' | 'introduction' | 'technical' | 'behavioral' | 'leadership' | 'closing';
 
 const CURRENT_MODELS = [
-  "https://api-inference.huggingface.co/pipeline/text-generation/facebook/opt-350m",
-  "https://api-inference.huggingface.co/pipeline/text-generation/gpt2",
-  "https://api-inference.huggingface.co/pipeline/text-generation/EleutherAI/gpt-neo-125M"
+  "https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1"
 ];
 
 const generateFallbackResponse = (userMessage: string, stage: InterviewStage): string => {
@@ -57,7 +55,7 @@ const generateFallbackResponse = (userMessage: string, stage: InterviewStage): s
 };
 
 export async function generateAIResponse(prompt: string): Promise<string> {
-  const API_KEY = process.env.NEXT_PUBLIC_HUGGINGFACE_API_KEY;
+  const API_KEY = process.env.HUGGINGFACE_API_KEY;
   
   if (!API_KEY) {
     console.error('Hugging Face API key not found in environment variables');
@@ -72,17 +70,20 @@ export async function generateAIResponse(prompt: string): Promise<string> {
       const response = await fetch(modelUrl, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${API_KEY}`,
+          'Authorization': `Bearer ${API_KEY.trim()}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          inputs: `Interviewer: ${prompt}\nCandidate:`,
+          inputs: `You are an AI interview coach. Respond directly to the candidate's message without repeating their question or adding prefixes like "AI Interview Coach:". Keep responses concise and professional.
+
+Candidate: ${prompt}`,
           parameters: {
-            max_new_tokens: 50,
+            max_new_tokens: 100,  // Reduced for faster responses
             temperature: 0.7,
             do_sample: true,
             top_p: 0.9,
-            return_full_text: false
+            return_full_text: false,
+            repetition_penalty: 1.2  // Added to reduce repetition
           }
         }),
       });
@@ -103,8 +104,9 @@ export async function generateAIResponse(prompt: string): Promise<string> {
         if (generatedText && generatedText.length > 20) {
           // Clean up the response
           const cleaned = generatedText
-            .replace(/Interviewer:.*?\nCandidate:/i, '')
-            .replace(/Candidate:/i, '')
+            .replace(/Candidate:.*?\n/i, '')
+            .replace(/AI Interview Coach:/i, '')
+            .replace(/Interviewer:/i, '')
             .trim();
           
           if (cleaned.length > 15) {
