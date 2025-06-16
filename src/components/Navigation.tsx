@@ -62,6 +62,16 @@ export default function Navigation() {
 
       {/* User Section */}
       <div className="p-4 border-t border-slate-200 dark:border-slate-700">
+        {/* Theme Toggle */}
+        <div className="mb-4">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+              Theme
+            </span>
+          </div>
+          <ThemeToggle />
+        </div>
+        
         {status === 'authenticated' ? (
           <div className="space-y-3">
             {/* User Info */}
@@ -106,11 +116,6 @@ export default function Navigation() {
             </Link>
           </div>
         )}
-        
-        {/* Theme Toggle */}
-        <div className="mt-4 flex justify-center">
-          <ThemeToggle />
-        </div>
       </div>
     </nav>
   );

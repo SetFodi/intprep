@@ -136,4 +136,20 @@ export async function testAPIConnection(): Promise<boolean> {
     console.error('API connection test failed:', error);
     return false;
   }
+}
+
+export function getInterviewPrompt(type: string): string {
+  switch (type) {
+    case 'behavioral':
+      return `You are conducting a behavioral interview. Ask questions about past experiences, challenges, and how the candidate handled various situations. Focus on STAR method responses (Situation, Task, Action, Result). Be encouraging and ask follow-up questions.`;
+    
+    case 'technical':
+      return `You are conducting a technical interview. Ask questions about technical concepts, problem-solving approaches, and past technical projects. Be encouraging but thorough in evaluating technical knowledge.`;
+    
+    case 'system-design':
+      return `You are conducting a system design interview. Ask about designing scalable systems, architecture decisions, and trade-offs. Focus on high-level design, scalability, and real-world considerations.`;
+    
+    default:
+      return `You are conducting a general interview. Ask relevant questions about the candidate's experience, goals, and qualifications. Be professional, encouraging, and engaging.`;
+  }
 } 

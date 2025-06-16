@@ -39,6 +39,12 @@ export async function GET() {
           totalPracticeSessions: {
             $sum: { $cond: [{ $eq: ['$type', 'practice_session'] }, 1, 0] }
           },
+          totalCodingChallenges: {
+            $sum: { $cond: [{ $eq: ['$type', 'coding_challenge'] }, 1, 0] }
+          },
+          totalMessages: {
+            $sum: { $cond: [{ $eq: ['$type', 'ai_interview'] }, '$messageCount', 0] }
+          },
           totalTimeSpent: { $sum: '$duration' },
           averageScore: { $avg: '$score' }
         }
@@ -60,6 +66,8 @@ export async function GET() {
       stats: {
         totalInterviews: stats?.totalInterviews || 0,
         totalPracticeSessions: stats?.totalPracticeSessions || 0,
+        totalCodingChallenges: stats?.totalCodingChallenges || 0,
+        totalMessages: stats?.totalMessages || 0,
         totalTimeSpent: stats?.totalTimeSpent || 0,
         averageScore: stats?.averageScore || 0,
         currentStreak

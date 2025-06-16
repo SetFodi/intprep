@@ -1,4 +1,5 @@
 import { AIFeedback } from '@/types';
+import { ChatCompletionMessageParam } from 'openai';
 
 // Advanced AI feedback patterns and responses
 const AI_FEEDBACK_PATTERNS = {
@@ -289,4 +290,17 @@ function generateAdvancedFeedback(score: number, analysis: any, category: string
   else template = feedbackTemplates.needs_improvement;
 
   return template[Math.floor(Math.random() * template.length)];
+}
+
+function generateFeedback(transcript: string[]): string {
+  // Simple feedback generation
+  const wordCount = transcript.join(' ').split(' ').length;
+  
+  if (wordCount < 50) {
+    return "Try to provide more detailed responses. Elaborate on your thoughts and experiences.";
+  } else if (wordCount > 500) {
+    return "Good detailed response! Try to be more concise while maintaining the key points.";
+  }
+  
+  return "Good response! Continue to elaborate on your experiences and provide specific examples.";
 }

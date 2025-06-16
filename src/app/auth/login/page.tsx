@@ -1,22 +1,20 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { signIn, useSession } from 'next-auth/react';
 import { LogIn, Mail, Lock, Eye, EyeOff, Brain, ArrowRight, CheckCircle } from 'lucide-react';
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { data: session, status } = useSession();
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -27,10 +25,8 @@ export default function LoginPage() {
   }, [status, router, searchParams]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setEmail(e.target.value);
+    setPassword(e.target.value);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -40,8 +36,8 @@ export default function LoginPage() {
 
     try {
       const result = await signIn('credentials', {
-        email: formData.email,
-        password: formData.password,
+        email: email,
+        password: password,
         redirect: false,
       });
 
@@ -134,7 +130,7 @@ export default function LoginPage() {
                   required
                   className="block w-full pl-10 pr-3 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 placeholder-slate-500 dark:placeholder-slate-400 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                   placeholder="Enter your email"
-                  value={formData.email}
+                  value={email}
                   onChange={handleChange}
                 />
               </div>
@@ -157,7 +153,7 @@ export default function LoginPage() {
                   required
                   className="block w-full pl-10 pr-12 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 placeholder-slate-500 dark:placeholder-slate-400 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                   placeholder="Enter your password"
-                  value={formData.password}
+                  value={password}
                   onChange={handleChange}
                 />
                 <button
@@ -203,7 +199,7 @@ export default function LoginPage() {
               </div>
               <div className="relative flex justify-center text-sm">
                 <span className="px-2 bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
-                  Don't have an account?
+                  Don&apos;t have an account?
                 </span>
               </div>
             </div>
@@ -229,5 +225,20 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   );
 } 

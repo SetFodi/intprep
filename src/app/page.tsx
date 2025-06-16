@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { Brain, MessageSquare, Target, Mic, Video, ArrowRight, Users, Clock, TrendingUp } from "lucide-react";
-import ThemeToggle from "@/components/ThemeToggle";
 
 export default function Home() {
   return (
@@ -22,7 +21,6 @@ export default function Home() {
               </div>
             </div>
             <div className="flex items-center space-x-6">
-              <ThemeToggle />
               <Link
                 href="/auth/login"
                 className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium transition-colors"

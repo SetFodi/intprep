@@ -22,6 +22,8 @@ import {
 interface UserStats {
   totalInterviews: number;
   totalPracticeSessions: number;
+  totalCodingChallenges: number;
+  totalMessages: number;
   totalTimeSpent: number;
   averageScore: number;
   currentStreak: number;
@@ -37,11 +39,17 @@ interface RecentActivity {
   createdAt: string;
 }
 
+interface UsageInfo {
+  dailyLimit: number;
+  usedToday: number;
+  remainingToday: number;
+  canUseAI: boolean;
+}
+
 export default function DashboardPage() {
   const router = useRouter();
   const { data: session, status } = useSession();
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [stats, setStats] = useState<UserStats | null>(null);
   const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
 
@@ -67,6 +75,8 @@ export default function DashboardPage() {
             setStats({
               totalInterviews: 0,
               totalPracticeSessions: 0,
+              totalCodingChallenges: 0,
+              totalMessages: 0,
               totalTimeSpent: 0,
               averageScore: 0,
               currentStreak: 0
@@ -85,6 +95,8 @@ export default function DashboardPage() {
           setStats({
             totalInterviews: 0,
             totalPracticeSessions: 0,
+            totalCodingChallenges: 0,
+            totalMessages: 0,
             totalTimeSpent: 0,
             averageScore: 0,
             currentStreak: 0
@@ -99,6 +111,41 @@ export default function DashboardPage() {
     fetchStats();
   }, [status]);
 
+  // Refresh stats when component becomes visible (user returns from another page)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden && status === 'authenticated') {
+        // Refresh stats when user returns to the dashboard
+        fetchStats();
+      }
+    };
+
+    const fetchStats = async () => {
+      try {
+        const response = await fetch('/api/user/stats', {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          setStats(data.stats);
+          setRecentActivity(data.recentActivity);
+        }
+      } catch (err) {
+        console.error('Error refreshing stats:', err);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [status]);
+
   if (status === 'loading' || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white dark:bg-slate-900">
@@ -110,7 +157,7 @@ export default function DashboardPage() {
     );
   }
 
-  if (error && !stats) {
+  if (!stats) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white dark:bg-slate-900 px-4">
         <div className="max-w-md w-full space-y-8">
@@ -119,7 +166,7 @@ export default function DashboardPage() {
             <h2 className="text-xl font-semibold text-slate-900 dark:text-white mb-4">
               Error Loading Dashboard
             </h2>
-            <p className="text-slate-600 dark:text-slate-400 mb-6">{error}</p>
+            <p className="text-slate-600 dark:text-slate-400 mb-6">An error occurred while loading your dashboard.</p>
             <div className="space-y-3">
               <button
                 onClick={() => window.location.reload()}
@@ -175,20 +222,7 @@ export default function DashboardPage() {
 
           {/* Quick Actions */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-            <Link
-              href="/ai-interview"
-              className="group bg-blue-600 hover:bg-blue-700 rounded-lg p-6 text-white transition-colors"
-            >
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-white/20 rounded-lg">
-                  <MessageSquare className="h-6 w-6" />
-                </div>
-                <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Start AI Interview</h3>
-              <p className="text-blue-100">Practice with our advanced AI interviewer</p>
-            </Link>
-
+            <AIInterviewCard />
             <Link
               href="/coding"
               className="group bg-green-600 hover:bg-green-700 rounded-lg p-6 text-white transition-colors"
@@ -206,7 +240,7 @@ export default function DashboardPage() {
 
           {/* Stats Grid */}
           {stats && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
               <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-6 border border-slate-200 dark:border-slate-700">
                 <div className="flex items-center justify-between">
                   <div>
@@ -222,11 +256,23 @@ export default function DashboardPage() {
               <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-6 border border-slate-200 dark:border-slate-700">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-slate-600 dark:text-slate-400">Practice Sessions</p>
-                    <p className="text-2xl font-bold text-slate-900 dark:text-white">{stats.totalPracticeSessions}</p>
+                    <p className="text-sm font-medium text-slate-600 dark:text-slate-400">Messages Sent</p>
+                    <p className="text-2xl font-bold text-slate-900 dark:text-white">{stats.totalMessages}</p>
                   </div>
                   <div className="p-3 bg-green-100 dark:bg-green-900 rounded-lg">
-                    <Brain className="h-5 w-5 text-green-600 dark:text-green-400" />
+                    <MessageSquare className="h-5 w-5 text-green-600 dark:text-green-400" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-6 border border-slate-200 dark:border-slate-700">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-slate-600 dark:text-slate-400">Coding Challenges</p>
+                    <p className="text-2xl font-bold text-slate-900 dark:text-white">{stats.totalCodingChallenges}</p>
+                  </div>
+                  <div className="p-3 bg-purple-100 dark:bg-purple-900 rounded-lg">
+                    <Brain className="h-5 w-5 text-purple-600 dark:text-purple-400" />
                   </div>
                 </div>
               </div>
@@ -237,8 +283,8 @@ export default function DashboardPage() {
                     <p className="text-sm font-medium text-slate-600 dark:text-slate-400">Hours Practiced</p>
                     <p className="text-2xl font-bold text-slate-900 dark:text-white">{Math.round(stats.totalTimeSpent / 60)}</p>
                   </div>
-                  <div className="p-3 bg-purple-100 dark:bg-purple-900 rounded-lg">
-                    <Clock className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                  <div className="p-3 bg-yellow-100 dark:bg-yellow-900 rounded-lg">
+                    <Clock className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
                   </div>
                 </div>
               </div>
@@ -251,8 +297,8 @@ export default function DashboardPage() {
                       {stats.averageScore > 0 ? `${stats.averageScore}%` : 'N/A'}
                     </p>
                   </div>
-                  <div className="p-3 bg-yellow-100 dark:bg-yellow-900 rounded-lg">
-                    <TrendingUp className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+                  <div className="p-3 bg-indigo-100 dark:bg-indigo-900 rounded-lg">
+                    <TrendingUp className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
                   </div>
                 </div>
               </div>
@@ -370,5 +416,68 @@ export default function DashboardPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+function AIInterviewCard() {
+  const [usage, setUsage] = useState<UsageInfo | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUsage = async () => {
+      try {
+        const response = await fetch('/api/user/usage');
+        if (response.ok) {
+          const data = await response.json();
+          setUsage(data);
+        }
+      } catch (error) {
+        console.error('Error fetching usage:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsage();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="bg-blue-600 rounded-lg p-6 text-white">
+        <div className="animate-pulse">
+          <div className="h-6 bg-white/20 rounded mb-4"></div>
+          <div className="h-4 bg-white/20 rounded mb-2"></div>
+          <div className="h-4 bg-white/20 rounded w-3/4"></div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <Link
+      href="/ai-interview"
+      className="group bg-blue-600 hover:bg-blue-700 rounded-lg p-6 text-white transition-colors relative"
+    >
+      <div className="flex items-center justify-between mb-4">
+        <div className="p-3 bg-white/20 rounded-lg">
+          <MessageSquare className="h-6 w-6" />
+        </div>
+        <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+      </div>
+      <h3 className="text-xl font-semibold mb-2">Start AI Interview</h3>
+      <p className="text-blue-100 mb-3">Practice with our advanced AI interviewer</p>
+      
+      {usage && (
+        <div className="text-sm">
+          {usage.canUseAI ? (
+            <span className="text-blue-200">
+              {usage.remainingToday} / {usage.dailyLimit} remaining today
+            </span>
+          ) : (
+            <span className="text-yellow-200">Daily limit reached - resets tomorrow</span>
+          )}
+        </div>
+      )}
+    </Link>
   );
 }

@@ -53,7 +53,7 @@ userSchema.pre('save', function(next) {
 });
 
 // Method to compare passwords
-userSchema.methods.comparePassword = async function(candidatePassword: string) {
+userSchema.methods.comparePassword = async function(candidatePassword: string): Promise<boolean> {
   try {
     console.log('Comparing passwords for user:', this.email);
     const isMatch = await bcrypt.compare(candidatePassword, this.password);

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Brain, Code, Clock, Play, RotateCcw, CheckCircle, XCircle } from 'lucide-react';
+import { Play, RotateCcw, CheckCircle, XCircle, Clock, Brain } from 'lucide-react';
 import Editor from '@monaco-editor/react';
 import { sampleChallenges, executeCode, CodeExecutionResult } from '@/utils/codeExecution';
 

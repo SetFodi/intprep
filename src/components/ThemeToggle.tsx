@@ -29,35 +29,30 @@ export default function ThemeToggle() {
   // Don't render anything until mounted to avoid hydration mismatch
   if (!mounted) {
     return (
-      <div className="h-12 w-12 rounded-xl bg-gray-200 animate-pulse" />
+      <div className="h-10 w-20 rounded-full bg-slate-200 dark:bg-slate-700 animate-pulse" />
     );
   }
 
   return (
     <button
       onClick={toggleTheme}
-      className="relative inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 group"
+      className="relative inline-flex items-center w-16 h-8 rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-slate-900 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600"
       aria-label="Toggle theme"
     >
-      {/* Background gradient that changes based on theme */}
-      <div className={`absolute inset-0 rounded-xl transition-all duration-500 ${
+      {/* Track background with gradient */}
+      <div className={`absolute inset-0 rounded-full transition-all duration-300 ${
         theme === 'dark' 
-          ? 'bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-700' 
-          : 'bg-gradient-to-br from-yellow-400 via-orange-400 to-pink-400'
+          ? 'bg-gradient-to-r from-indigo-500 to-purple-600' 
+          : 'bg-gradient-to-r from-yellow-400 to-orange-500'
       }`} />
       
-      {/* Animated background blur effect */}
-      <div className={`absolute inset-0 rounded-xl blur-sm transition-all duration-500 ${
-        theme === 'dark' 
-          ? 'bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-700 opacity-50' 
-          : 'bg-gradient-to-br from-yellow-400 via-orange-400 to-pink-400 opacity-50'
-      }`} />
-      
-      {/* Icon container */}
-      <div className="relative z-10 flex items-center justify-center">
+      {/* Sliding indicator */}
+      <div className={`relative flex items-center justify-center w-6 h-6 bg-white dark:bg-slate-800 rounded-full shadow-md transform transition-transform duration-300 ${
+        theme === 'dark' ? 'translate-x-8' : 'translate-x-1'
+      }`}>
         {/* Sun icon for light mode */}
         <Sun 
-          className={`h-6 w-6 text-white transition-all duration-500 transform ${
+          className={`absolute h-4 w-4 text-orange-500 transition-all duration-300 transform ${
             theme === 'light' 
               ? 'rotate-0 scale-100 opacity-100' 
               : 'rotate-180 scale-0 opacity-0'
@@ -66,7 +61,7 @@ export default function ThemeToggle() {
         
         {/* Moon icon for dark mode */}
         <Moon 
-          className={`absolute h-6 w-6 text-white transition-all duration-500 transform ${
+          className={`absolute h-4 w-4 text-indigo-600 transition-all duration-300 transform ${
             theme === 'dark' 
               ? 'rotate-0 scale-100 opacity-100' 
               : '-rotate-180 scale-0 opacity-0'
@@ -74,25 +69,26 @@ export default function ThemeToggle() {
         />
       </div>
       
-      {/* Hover effect ring */}
-      <div className="absolute inset-0 rounded-xl ring-2 ring-transparent group-hover:ring-white/30 transition-all duration-300" />
+      {/* Light mode indicator text */}
+      <span className={`absolute left-2 text-xs font-medium text-white transition-opacity duration-300 ${
+        theme === 'light' ? 'opacity-0' : 'opacity-70'
+      }`}>
+        Light
+      </span>
       
-      {/* Sparkle effects for light mode */}
-      {theme === 'light' && (
-        <>
-          <div className="absolute -top-1 -right-1 w-2 h-2 bg-yellow-300 rounded-full animate-ping opacity-75" />
-          <div className="absolute -bottom-1 -left-1 w-1.5 h-1.5 bg-orange-400 rounded-full animate-pulse" />
-        </>
-      )}
+      {/* Dark mode indicator text */}
+      <span className={`absolute right-2 text-xs font-medium text-white transition-opacity duration-300 ${
+        theme === 'dark' ? 'opacity-0' : 'opacity-70'
+      }`}>
+        Dark
+      </span>
       
-      {/* Star effects for dark mode */}
-      {theme === 'dark' && (
-        <>
-          <div className="absolute -top-0.5 -right-0.5 w-1 h-1 bg-blue-300 rounded-full animate-pulse" />
-          <div className="absolute -bottom-0.5 -left-0.5 w-1 h-1 bg-purple-300 rounded-full animate-ping opacity-75" />
-          <div className="absolute top-1 right-1 w-0.5 h-0.5 bg-indigo-200 rounded-full animate-pulse" />
-        </>
-      )}
+      {/* Subtle glow effect */}
+      <div className={`absolute inset-0 rounded-full blur-sm transition-all duration-300 ${
+        theme === 'dark' 
+          ? 'bg-gradient-to-r from-indigo-500 to-purple-600 opacity-20' 
+          : 'bg-gradient-to-r from-yellow-400 to-orange-500 opacity-20'
+      }`} />
     </button>
   );
 }
