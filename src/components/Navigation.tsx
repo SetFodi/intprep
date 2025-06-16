@@ -2,113 +2,139 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Brain, Code, Settings, LogIn, UserPlus } from 'lucide-react';
+import { Home, Brain, Code, Settings, LogIn, UserPlus, User, LogOut, BarChart3 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
-import { useAuth } from '@/contexts/AuthContext';
+import { useSession, signOut } from 'next-auth/react';
 
 const navigation = [
   { name: 'Home', href: '/', icon: Home },
+  { name: 'Dashboard', href: '/dashboard', icon: BarChart3 },
   { name: 'AI Interview', href: '/ai-interview', icon: Brain },
-  { name: 'Coding Practice', href: '/coding', icon: Code },
-  { name: 'Dashboard', href: '/dashboard', icon: Settings },
-];
-
-const authNavigation = [
-  { name: 'Login', href: '/auth/login', icon: LogIn },
-  { name: 'Register', href: '/auth/register', icon: UserPlus },
+  { name: 'Coding', href: '/coding', icon: Code },
+  { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
 export default function Navigation() {
   const pathname = usePathname();
-  const { user, logout } = useAuth();
+  const { data: session, status } = useSession();
 
   return (
-    <nav className="fixed top-0 left-0 h-full w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
-      <div className="flex flex-col h-full">
-        {/* Logo */}
-        <div className="p-6">
-          <Link href="/" className="flex items-center space-x-2">
-            <Brain className="h-8 w-8 text-purple-600 dark:text-purple-400" />
-            <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-400 dark:to-blue-400 bg-clip-text text-transparent">
-              AI Farte
+    <nav className="flex flex-col h-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-r border-white/20 dark:border-slate-700/20 shadow-xl">
+      {/* Logo Section */}
+      <div className="p-6 border-b border-white/10 dark:border-slate-700/20">
+        <Link href="/" className="flex items-center group">
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl blur opacity-70 group-hover:opacity-100 transition-opacity"></div>
+            <div className="relative bg-gradient-to-r from-blue-600 to-purple-600 p-2.5 rounded-xl shadow-lg">
+              <Brain className="h-7 w-7 text-white" />
+            </div>
+          </div>
+          <div className="ml-3">
+            <span className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 dark:from-blue-400 dark:via-purple-400 dark:to-indigo-400 bg-clip-text text-transparent">
+              InterviewAI
             </span>
-          </Link>
-        </div>
+            <div className="text-xs text-slate-500 dark:text-slate-400">AI-Powered Practice</div>
+          </div>
+        </Link>
+      </div>
 
-        {/* Navigation Links */}
-        <div className="flex-1 px-4 space-y-1">
-          {navigation.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
-                  isActive
-                    ? 'bg-purple-100 text-purple-900 dark:bg-purple-900 dark:text-purple-100'
-                    : 'text-gray-900 hover:bg-gray-100 dark:text-gray-100 dark:hover:bg-gray-700'
-                }`}
-              >
-                <item.icon className={`h-5 w-5 mr-3 ${
-                  isActive
-                    ? 'text-purple-600 dark:text-purple-400'
-                    : 'text-gray-600 dark:text-gray-400'
-                }`} />
-                {item.name}
-              </Link>
-            );
-          })}
-        </div>
+      {/* Navigation Links */}
+      <div className="flex-1 px-4 py-6 space-y-2">
+        {navigation.map((item) => {
+          const isActive = pathname === item.href;
+          const isProtected = item.href !== '/' && item.href !== '/auth/login' && item.href !== '/auth/register';
+          const canAccess = !isProtected || status === 'authenticated';
+          
+          return (
+            <Link
+              key={item.name}
+              href={canAccess ? item.href : '/auth/login'}
+              className={`group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 ${
+                isActive
+                  ? 'bg-gradient-to-r from-blue-500/10 to-purple-500/10 text-blue-600 dark:text-blue-400 shadow-lg border border-blue-200/50 dark:border-blue-800/50'
+                  : canAccess
+                  ? 'text-slate-600 dark:text-slate-300 hover:bg-slate-100/70 dark:hover:bg-slate-800/70 hover:text-slate-900 dark:hover:text-white'
+                  : 'text-slate-400 dark:text-slate-500 cursor-not-allowed opacity-60'
+              }`}
+            >
+              <div className={`relative ${isActive ? 'transform scale-110' : 'group-hover:scale-105'} transition-transform`}>
+                {isActive && (
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg blur opacity-30"></div>
+                )}
+                <div className={`relative ${isActive ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white' : ''} p-2 rounded-lg`}>
+                  <item.icon className="h-5 w-5" />
+                </div>
+              </div>
+              <span className="ml-3 font-medium">{item.name}</span>
+              {isActive && (
+                <div className="ml-auto w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
+              )}
+            </Link>
+          );
+        })}
+      </div>
 
-        {/* Auth Links */}
-        <div className="px-4 py-4 border-t border-gray-200 dark:border-gray-700">
-          {user ? (
-            <div className="space-y-4">
-              <div className="px-4 py-2">
-                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                  {user.name}
+      {/* User Section */}
+      <div className="flex-shrink-0 p-4 border-t border-white/10 dark:border-slate-700/20">
+        {status === 'authenticated' ? (
+          <div className="space-y-3">
+            {/* User Info */}
+            <div className="flex items-center px-4 py-3 bg-slate-50/70 dark:bg-slate-800/70 backdrop-blur-sm rounded-xl border border-white/20 dark:border-slate-700/20">
+              <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full">
+                <User className="h-5 w-5 text-white" />
+              </div>
+              <div className="ml-3 flex-1 min-w-0">
+                <p className="text-sm font-medium text-slate-900 dark:text-white truncate">
+                  {session?.user?.name || 'User'}
                 </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  {user.email}
+                <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                  {session?.user?.email}
                 </p>
               </div>
-              <button
-                onClick={logout}
-                className="w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg text-gray-900 hover:bg-gray-100 dark:text-gray-100 dark:hover:bg-gray-700"
-              >
-                <LogIn className="h-5 w-5 mr-3 text-gray-600 dark:text-gray-400" />
-                Logout
-              </button>
             </div>
-          ) : (
-            <div className="space-y-1">
-              {authNavigation.map((item) => {
-                const isActive = pathname === item.href;
-                return (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
-                      isActive
-                        ? 'bg-purple-100 text-purple-900 dark:bg-purple-900 dark:text-purple-100'
-                        : 'text-gray-900 hover:bg-gray-100 dark:text-gray-100 dark:hover:bg-gray-700'
-                    }`}
-                  >
-                    <item.icon className={`h-5 w-5 mr-3 ${
-                      isActive
-                        ? 'text-purple-600 dark:text-purple-400'
-                        : 'text-gray-600 dark:text-gray-400'
-                    }`} />
-                    {item.name}
-                  </Link>
-                );
-              })}
-            </div>
-          )}
-        </div>
-
+            
+            {/* Sign Out Button */}
+            <button
+              onClick={() => signOut({ callbackUrl: '/auth/login' })}
+              className="w-full group flex items-center px-4 py-3 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50/70 dark:hover:bg-red-900/20 rounded-xl transition-all duration-200"
+            >
+              <div className="relative group-hover:scale-105 transition-transform">
+                <div className="p-2 rounded-lg group-hover:bg-red-100 dark:group-hover:bg-red-900/30 transition-colors">
+                  <LogOut className="h-5 w-5" />
+                </div>
+              </div>
+              <span className="ml-3">Sign Out</span>
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <Link
+              href="/auth/login"
+              className="w-full group flex items-center px-4 py-3 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/70 dark:hover:bg-blue-900/20 rounded-xl transition-all duration-200"
+            >
+              <div className="relative group-hover:scale-105 transition-transform">
+                <div className="p-2 rounded-lg group-hover:bg-blue-100 dark:group-hover:bg-blue-900/30 transition-colors">
+                  <LogIn className="h-5 w-5" />
+                </div>
+              </div>
+              <span className="ml-3">Sign In</span>
+            </Link>
+            <Link
+              href="/auth/register"
+              className="w-full group flex items-center px-4 py-3 text-sm font-medium bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+            >
+              <div className="relative group-hover:scale-105 transition-transform">
+                <div className="p-2 rounded-lg">
+                  <UserPlus className="h-5 w-5" />
+                </div>
+              </div>
+              <span className="ml-3 font-semibold">Get Started</span>
+            </Link>
+          </div>
+        )}
+        
         {/* Theme Toggle */}
-        <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+        <div className="mt-4 flex justify-center">
           <ThemeToggle />
         </div>
       </div>

@@ -1,9 +1,9 @@
-import NextAuth from 'next-auth';
+import NextAuth, { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { connectToDatabase } from './mongodb';
 import User from '@/models/User';
 
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -12,23 +12,33 @@ export const authOptions = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
+        console.log('Auth attempt for:', credentials?.email);
+        
         if (!credentials?.email || !credentials?.password) {
-          return null;
+          console.log('Missing credentials');
+          throw new Error('Please enter your email and password');
         }
 
         try {
           await connectToDatabase();
+          console.log('Connected to database, searching for user...');
+          
           const user = await User.findOne({ email: credentials.email });
-
+          
           if (!user) {
-            return null;
+            console.log('User not found:', credentials.email);
+            throw new Error('No user found with this email');
           }
 
+          console.log('User found, comparing passwords...');
           const isValid = await user.comparePassword(credentials.password);
+          
           if (!isValid) {
-            return null;
+            console.log('Invalid password for user:', credentials.email);
+            throw new Error('Invalid password');
           }
 
+          console.log('Authentication successful for:', credentials.email);
           return {
             id: user._id.toString(),
             email: user.email,
@@ -36,7 +46,7 @@ export const authOptions = {
           };
         } catch (error) {
           console.error('Auth error:', error);
-          return null;
+          throw error;
         }
       },
     }),

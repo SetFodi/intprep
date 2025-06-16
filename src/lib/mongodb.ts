@@ -24,10 +24,11 @@ if (!cached) {
 }
 
 export async function connectToDatabase() {
-  console.log('Attempting to connect to MongoDB...');
+  console.log('Connecting to MongoDB...');
+  console.log('MongoDB URI:', MONGODB_URI ? 'URI is defined' : 'URI is undefined');
   
   if (cached.conn) {
-    console.log('Using cached MongoDB connection');
+    console.log('Using cached database connection');
     return cached.conn;
   }
 
@@ -36,7 +37,7 @@ export async function connectToDatabase() {
       bufferCommands: false,
     };
 
-    console.log('Creating new MongoDB connection...');
+    console.log('Creating new database connection...');
     cached.promise = mongoose.connect(MONGODB_URI!, opts)
       .then((mongoose) => {
         console.log('Successfully connected to MongoDB');
@@ -51,8 +52,8 @@ export async function connectToDatabase() {
   try {
     cached.conn = await cached.promise;
   } catch (e) {
-    console.error('Error in cached connection:', e);
     cached.promise = null;
+    console.error('Error in cached connection:', e);
     throw e;
   }
 

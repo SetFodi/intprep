@@ -1,15 +1,13 @@
-import type { Metadata } from "next";
 import { Inter } from 'next/font/google';
 import Providers from '@/components/Providers';
 import Navigation from "@/components/Navigation";
-import { AuthProvider } from "@/contexts/AuthContext";
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
-export const metadata: Metadata = {
-  title: "AI Farte - Premium Interview Practice",
-  description: "Master interviews with AI Farte, the most advanced AI interviewer. Get premium feedback and realistic practice sessions.",
+export const metadata = {
+  title: 'Interview Prep',
+  description: 'Prepare for your next interview with AI-powered practice',
 };
 
 export default function RootLayout({
@@ -19,18 +17,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`antialiased bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-purple-900 dark:to-indigo-900 transition-colors duration-300 ${inter.className}`}
-      >
+      <body className={inter.className}>
         <Providers>
-          <AuthProvider>
-            <div className="flex min-h-screen">
+          <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
+            <div className="w-64">
               <Navigation />
-              <main className="flex-1 ml-64">
-                {children}
-              </main>
             </div>
-          </AuthProvider>
+            <main className="flex-1 overflow-y-auto">
+              {children}
+            </main>
+          </div>
         </Providers>
       </body>
     </html>
