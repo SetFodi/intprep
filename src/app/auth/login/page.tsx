@@ -65,46 +65,37 @@ export default function LoginPage() {
   // Show loading state while checking authentication
   if (status === 'loading') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-blue-900 dark:to-indigo-900">
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-slate-900">
         <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-blue-900 dark:to-indigo-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      {/* Floating background elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-blue-400/20 to-purple-600/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-purple-400/20 to-pink-600/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-      </div>
-
-      <div className="relative z-10 max-w-md w-full space-y-8">
+    <div className="min-h-screen bg-white dark:bg-slate-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center">
-          <Link href="/" className="flex items-center justify-center mb-8 group">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl blur opacity-70 group-hover:opacity-100 transition-opacity"></div>
-              <div className="relative bg-gradient-to-r from-blue-600 to-purple-600 p-3 rounded-xl shadow-lg">
-                <Brain className="h-8 w-8 text-white" />
-              </div>
+          <Link href="/" className="flex items-center justify-center mb-8">
+            <div className="bg-blue-600 p-3 rounded-lg">
+              <Brain className="h-8 w-8 text-white" />
             </div>
-            <span className="ml-3 text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 dark:from-blue-400 dark:via-purple-400 dark:to-indigo-400 bg-clip-text text-transparent">
+            <span className="ml-3 text-2xl font-semibold text-slate-900 dark:text-white">
               InterviewAI
             </span>
           </Link>
           
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-3">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-3">
             Welcome back
           </h2>
-          <p className="text-slate-600 dark:text-slate-300 mb-8">
-            Sign in to continue your interview preparation journey
+          <p className="text-slate-600 dark:text-slate-400 mb-8">
+            Sign in to continue your interview preparation
           </p>
         </div>
 
         {/* Success Message */}
         {searchParams?.get('registered') && (
-          <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/50 dark:to-emerald-900/50 backdrop-blur-sm border border-green-200 dark:border-green-800 rounded-2xl p-4 mb-6">
+          <div className="bg-green-50 dark:bg-green-900/50 border border-green-200 dark:border-green-800 rounded-lg p-4 mb-6">
             <div className="flex items-center">
               <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400 mr-3" />
               <div className="text-sm text-green-700 dark:text-green-200">
@@ -116,7 +107,7 @@ export default function LoginPage() {
 
         {/* Error Message */}
         {error && (
-          <div className="bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900/50 dark:to-pink-900/50 backdrop-blur-sm border border-red-200 dark:border-red-800 rounded-2xl p-4 mb-6">
+          <div className="bg-red-50 dark:bg-red-900/50 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
             <div className="text-sm text-red-700 dark:text-red-200">
               {error}
             </div>
@@ -124,7 +115,7 @@ export default function LoginPage() {
         )}
 
         {/* Login Form */}
-        <div className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 dark:border-slate-700/20 p-8">
+        <div className="bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-8">
           <form className="space-y-6" onSubmit={handleSubmit}>
             {/* Email Field */}
             <div>
@@ -141,7 +132,7 @@ export default function LoginPage() {
                   type="email"
                   autoComplete="email"
                   required
-                  className="block w-full pl-10 pr-3 py-3 border border-slate-300 dark:border-slate-600 rounded-xl bg-white/50 dark:bg-slate-700/50 backdrop-blur-sm placeholder-slate-500 dark:placeholder-slate-400 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                  className="block w-full pl-10 pr-3 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 placeholder-slate-500 dark:placeholder-slate-400 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                   placeholder="Enter your email"
                   value={formData.email}
                   onChange={handleChange}
@@ -164,7 +155,7 @@ export default function LoginPage() {
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="current-password"
                   required
-                  className="block w-full pl-10 pr-12 py-3 border border-slate-300 dark:border-slate-600 rounded-xl bg-white/50 dark:bg-slate-700/50 backdrop-blur-sm placeholder-slate-500 dark:placeholder-slate-400 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                  className="block w-full pl-10 pr-12 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 placeholder-slate-500 dark:placeholder-slate-400 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                   placeholder="Enter your password"
                   value={formData.password}
                   onChange={handleChange}
@@ -188,7 +179,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                className="w-full flex justify-center py-3 px-4 text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {loading ? (
                   <div className="flex items-center">
@@ -199,7 +190,7 @@ export default function LoginPage() {
                   <div className="flex items-center">
                     <LogIn className="h-5 w-5 mr-2" />
                     <span>Sign in</span>
-                    <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight className="h-4 w-4 ml-2" />
                   </div>
                 )}
               </button>
@@ -211,7 +202,7 @@ export default function LoginPage() {
                 <div className="w-full border-t border-slate-300 dark:border-slate-600" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white/70 dark:bg-slate-800/70 text-slate-500 dark:text-slate-400">
+                <span className="px-2 bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
                   Don't have an account?
                 </span>
               </div>
@@ -233,14 +224,7 @@ export default function LoginPage() {
         {/* Footer */}
         <div className="text-center">
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            By signing in, you agree to our{' '}
-            <Link href="/terms" className="underline hover:text-slate-700 dark:hover:text-slate-300">
-              Terms of Service
-            </Link>{' '}
-            and{' '}
-            <Link href="/privacy" className="underline hover:text-slate-700 dark:hover:text-slate-300">
-              Privacy Policy
-            </Link>
+            By signing in, you agree to our Terms of Service and Privacy Policy
           </p>
         </div>
       </div>

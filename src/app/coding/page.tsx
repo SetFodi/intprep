@@ -64,34 +64,30 @@ export default function CodingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-white dark:bg-slate-900">
       {/* Navigation */}
-      <nav className="bg-white dark:bg-gray-800 shadow-sm">
+      <nav className="border-b border-slate-200 dark:border-slate-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
-              <div className="flex-shrink-0 flex items-center">
-                <Brain className="h-8 w-8 text-purple-600 dark:text-purple-400" />
-                <span className="ml-2 text-xl font-bold text-gray-900 dark:text-white">InterviewPrep</span>
+              <div className="flex items-center">
+                <div className="bg-blue-600 p-2 rounded-lg">
+                  <Brain className="h-6 w-6 text-white" />
+                </div>
+                <span className="ml-3 text-xl font-semibold text-slate-900 dark:text-white">InterviewAI</span>
               </div>
               <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
                 <Link
                   href="/dashboard"
-                  className="border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                  className="border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
                 >
                   Dashboard
                 </Link>
                 <Link
                   href="/coding"
-                  className="border-purple-500 text-gray-900 dark:text-white inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                  className="border-blue-500 text-slate-900 dark:text-white inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
                 >
                   Coding
-                </Link>
-                <Link
-                  href="/behavioral"
-                  className="border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                >
-                  Behavioral
                 </Link>
               </div>
             </div>
@@ -103,9 +99,9 @@ export default function CodingPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Problem Description */}
           <div className="lg:col-span-1">
-            <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+            <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-6 border border-slate-200 dark:border-slate-700">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-medium text-gray-900 dark:text-white">{currentChallenge.title}</h2>
+                <h2 className="text-lg font-medium text-slate-900 dark:text-white">{currentChallenge.title}</h2>
                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                   currentChallenge.difficulty === 'Easy' ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200' :
                   currentChallenge.difficulty === 'Medium' ? 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200' :
@@ -121,27 +117,27 @@ export default function CodingPage() {
                 </span>
               </div>
 
-              <p className="text-gray-700 dark:text-gray-300 mb-6">{currentChallenge.description}</p>
+              <p className="text-slate-700 dark:text-slate-300 mb-6">{currentChallenge.description}</p>
 
               {/* Timer */}
-              <div className="flex items-center justify-between mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+              <div className="flex items-center justify-between mb-6 p-4 bg-white dark:bg-slate-700 rounded-lg border border-slate-200 dark:border-slate-600">
                 <div className="flex items-center">
-                  <Clock className="h-5 w-5 text-gray-400 dark:text-gray-300 mr-2" />
-                  <span className="text-sm text-gray-600 dark:text-gray-300">Time Limit: {currentChallenge.timeLimit} min</span>
+                  <Clock className="h-5 w-5 text-slate-400 dark:text-slate-300 mr-2" />
+                  <span className="text-sm text-slate-600 dark:text-slate-300">Time Limit: {currentChallenge.timeLimit} min</span>
                 </div>
-                <div className={`text-lg font-mono ${timeLeft < 300 ? 'text-red-600 dark:text-red-400' : 'text-gray-900 dark:text-white'}`}>
+                <div className={`text-lg font-mono ${timeLeft < 300 ? 'text-red-600 dark:text-red-400' : 'text-slate-900 dark:text-white'}`}>
                   {formatTime(timeLeft)}
                 </div>
               </div>
 
               {/* Test Cases */}
               <div className="mb-6">
-                <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-3">Test Cases</h3>
+                <h3 className="text-sm font-medium text-slate-900 dark:text-white mb-3">Test Cases</h3>
                 <div className="space-y-3">
                   {currentChallenge.testCases.map((testCase, index) => (
-                    <div key={index} className="bg-gray-50 dark:bg-gray-700 p-3 rounded-md">
-                      <div className="text-xs text-gray-600 dark:text-gray-300 mb-1">Example {index + 1}:</div>
-                      <div className="text-sm text-gray-700 dark:text-gray-200">
+                    <div key={index} className="bg-white dark:bg-slate-700 p-3 rounded-md border border-slate-200 dark:border-slate-600">
+                      <div className="text-xs text-slate-600 dark:text-slate-300 mb-1">Example {index + 1}:</div>
+                      <div className="text-sm text-slate-700 dark:text-slate-200">
                         <div><strong>Input:</strong> {testCase.input}</div>
                         <div><strong>Output:</strong> {testCase.expectedOutput}</div>
                       </div>
@@ -152,7 +148,7 @@ export default function CodingPage() {
 
               {/* Challenge Selection */}
               <div className="mb-6">
-                <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-3">Other Challenges</h3>
+                <h3 className="text-sm font-medium text-slate-900 dark:text-white mb-3">Other Challenges</h3>
                 <div className="space-y-2">
                   {sampleChallenges.map((challenge, index) => (
                     <button
@@ -160,8 +156,8 @@ export default function CodingPage() {
                       onClick={() => switchChallenge(index)}
                       className={`w-full text-left p-2 rounded-md text-sm ${
                         challenge.title === currentChallenge.title
-                          ? 'bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-200'
-                          : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                          ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200'
+                          : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
                       }`}
                     >
                       {challenge.title}
@@ -174,14 +170,14 @@ export default function CodingPage() {
               <div className="flex space-x-3">
                 <button
                   onClick={resetChallenge}
-                  className="flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                  className="flex items-center px-3 py-2 border border-slate-300 dark:border-slate-600 text-sm font-medium rounded-md text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
                 >
                   <RotateCcw className="h-4 w-4 mr-1" />
                   Reset
                 </button>
                 <button
                   onClick={() => setShowSolution(!showSolution)}
-                  className="flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                  className="flex items-center px-3 py-2 border border-slate-300 dark:border-slate-600 text-sm font-medium rounded-md text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
                 >
                   {showSolution ? 'Hide' : 'Show'} Solution
                 </button>
@@ -191,13 +187,13 @@ export default function CodingPage() {
 
           {/* Code Editor and Results */}
           <div className="lg:col-span-2">
-            <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
-              <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <div className="bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+              <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-medium text-gray-900 dark:text-white">Code Editor</h3>
+                  <h3 className="text-lg font-medium text-slate-900 dark:text-white">Code Editor</h3>
                   <button
                     onClick={runCode}
-                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                    className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors"
                   >
                     <Play className="h-4 w-4 mr-2" />
                     Run Code
@@ -227,11 +223,11 @@ export default function CodingPage() {
                 {/* Results */}
                 {result && (
                   <div className="mt-6">
-                    <h4 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Test Results</h4>
+                    <h4 className="text-lg font-medium text-slate-900 dark:text-white mb-4">Test Results</h4>
                     {result.success ? (
                       <div className="space-y-3">
-                        <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Overall Score</span>
+                        <div className="flex items-center justify-between p-4 bg-white dark:bg-slate-700 rounded-lg border border-slate-200 dark:border-slate-600">
+                          <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Overall Score</span>
                           <span className={`text-lg font-bold ${
                             (result.score || 0) >= 80 ? 'text-green-600 dark:text-green-400' :
                             (result.score || 0) >= 60 ? 'text-yellow-600 dark:text-yellow-400' : 'text-red-600 dark:text-red-400'
@@ -240,14 +236,14 @@ export default function CodingPage() {
                           </span>
                         </div>
                         {result.testResults?.map((testResult, index) => (
-                          <div key={index} className="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
+                          <div key={index} className="flex items-center justify-between p-3 border border-slate-200 dark:border-slate-700 rounded-lg">
                             <div className="flex items-center">
                               {testResult.passed ? (
                                 <CheckCircle className="h-5 w-5 text-green-500 dark:text-green-400 mr-2" />
                               ) : (
                                 <XCircle className="h-5 w-5 text-red-500 dark:text-red-400 mr-2" />
                               )}
-                              <span className="text-sm text-gray-700 dark:text-gray-300">Test Case {index + 1}</span>
+                              <span className="text-sm text-slate-700 dark:text-slate-300">Test Case {index + 1}</span>
                             </div>
                             <span className={`text-sm ${testResult.passed ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                               {testResult.passed ? 'Passed' : 'Failed'}

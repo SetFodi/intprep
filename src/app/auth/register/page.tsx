@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { UserPlus, Mail, Lock, User, Eye, EyeOff, Brain, ArrowRight, CheckCircle, AlertCircle } from 'lucide-react';
+import { UserPlus, Mail, Lock, User, Eye, EyeOff, Brain, ArrowRight, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -94,56 +94,61 @@ export default function RegisterPage() {
 
   const passwordStrength = getPasswordStrength(formData.password);
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-blue-900 dark:to-indigo-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      {/* Floating background elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-purple-400/20 to-pink-600/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-blue-400/20 to-purple-600/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-      </div>
+  const getPasswordStrengthColor = () => {
+    if (passwordStrength.strength >= 75) return 'bg-green-600';
+    if (passwordStrength.strength >= 50) return 'bg-blue-600';
+    if (passwordStrength.strength >= 25) return 'bg-yellow-600';
+    return 'bg-red-600';
+  };
 
-      <div className="relative z-10 max-w-md w-full space-y-8">
+  const getPasswordStrengthText = () => {
+    if (passwordStrength.strength === 0) return 'Very Weak';
+    if (passwordStrength.strength < 25) return 'Weak';
+    if (passwordStrength.strength < 50) return 'Fair';
+    if (passwordStrength.strength < 75) return 'Good';
+    return 'Strong';
+  };
+
+  const passwordsMatch = formData.password === formData.confirmPassword;
+
+  return (
+    <div className="min-h-screen bg-white dark:bg-slate-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center">
-          <Link href="/" className="flex items-center justify-center mb-8 group">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl blur opacity-70 group-hover:opacity-100 transition-opacity"></div>
-              <div className="relative bg-gradient-to-r from-blue-600 to-purple-600 p-3 rounded-xl shadow-lg">
-                <Brain className="h-8 w-8 text-white" />
-              </div>
+          <Link href="/" className="flex items-center justify-center mb-8">
+            <div className="bg-blue-600 p-3 rounded-lg">
+              <Brain className="h-8 w-8 text-white" />
             </div>
-            <span className="ml-3 text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 dark:from-blue-400 dark:via-purple-400 dark:to-indigo-400 bg-clip-text text-transparent">
+            <span className="ml-3 text-2xl font-semibold text-slate-900 dark:text-white">
               InterviewAI
             </span>
           </Link>
           
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-3">
-            Join InterviewAI
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-3">
+            Create your account
           </h2>
-          <p className="text-slate-600 dark:text-slate-300 mb-8">
-            Start your journey to interview success
+          <p className="text-slate-600 dark:text-slate-400 mb-8">
+            Start your interview preparation journey today
           </p>
         </div>
 
         {/* Error Message */}
         {error && (
-          <div className="bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900/50 dark:to-pink-900/50 backdrop-blur-sm border border-red-200 dark:border-red-800 rounded-2xl p-4 mb-6">
-            <div className="flex items-center">
-              <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400 mr-3" />
-              <div className="text-sm text-red-700 dark:text-red-200">
-                {error}
-              </div>
+          <div className="bg-red-50 dark:bg-red-900/50 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
+            <div className="text-sm text-red-700 dark:text-red-200">
+              {error}
             </div>
           </div>
         )}
 
-        {/* Registration Form */}
-        <div className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 dark:border-slate-700/20 p-8">
+        {/* Register Form */}
+        <div className="bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-8">
           <form className="space-y-6" onSubmit={handleSubmit}>
             {/* Name Field */}
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                Full Name
+                Full name
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -155,7 +160,7 @@ export default function RegisterPage() {
                   type="text"
                   autoComplete="name"
                   required
-                  className="block w-full pl-10 pr-3 py-3 border border-slate-300 dark:border-slate-600 rounded-xl bg-white/50 dark:bg-slate-700/50 backdrop-blur-sm placeholder-slate-500 dark:placeholder-slate-400 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                  className="block w-full pl-10 pr-3 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 placeholder-slate-500 dark:placeholder-slate-400 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                   placeholder="Enter your full name"
                   value={formData.name}
                   onChange={handleChange}
@@ -166,7 +171,7 @@ export default function RegisterPage() {
             {/* Email Field */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                Email Address
+                Email address
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -178,8 +183,8 @@ export default function RegisterPage() {
                   type="email"
                   autoComplete="email"
                   required
-                  className="block w-full pl-10 pr-3 py-3 border border-slate-300 dark:border-slate-600 rounded-xl bg-white/50 dark:bg-slate-700/50 backdrop-blur-sm placeholder-slate-500 dark:placeholder-slate-400 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                  placeholder="Enter your email address"
+                  className="block w-full pl-10 pr-3 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 placeholder-slate-500 dark:placeholder-slate-400 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                  placeholder="Enter your email"
                   value={formData.email}
                   onChange={handleChange}
                 />
@@ -201,8 +206,8 @@ export default function RegisterPage() {
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="new-password"
                   required
-                  className="block w-full pl-10 pr-12 py-3 border border-slate-300 dark:border-slate-600 rounded-xl bg-white/50 dark:bg-slate-700/50 backdrop-blur-sm placeholder-slate-500 dark:placeholder-slate-400 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                  placeholder="Create a strong password"
+                  className="block w-full pl-10 pr-12 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 placeholder-slate-500 dark:placeholder-slate-400 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                  placeholder="Create a password"
                   value={formData.password}
                   onChange={handleChange}
                 />
@@ -222,22 +227,18 @@ export default function RegisterPage() {
               {/* Password Strength Indicator */}
               {formData.password && (
                 <div className="mt-2">
-                  <div className="flex items-center justify-between text-xs mb-1">
-                    <span className="text-slate-600 dark:text-slate-400">Password strength</span>
-                    <span className={`font-medium ${
-                      passwordStrength.strength >= 75 ? 'text-green-600 dark:text-green-400' :
-                      passwordStrength.strength >= 50 ? 'text-blue-600 dark:text-blue-400' :
-                      passwordStrength.strength >= 25 ? 'text-yellow-600 dark:text-yellow-400' :
-                      'text-red-600 dark:text-red-400'
-                    }`}>
-                      {passwordStrength.label}
+                  <div className="flex items-center space-x-2">
+                    <div className="flex-1">
+                      <div className="h-2 bg-slate-200 dark:bg-slate-600 rounded-full overflow-hidden">
+                        <div 
+                          className={`h-full transition-all duration-300 ${getPasswordStrengthColor()}`}
+                          style={{ width: `${(passwordStrength.strength + 1) * 25}%` }}
+                        />
+                      </div>
+                    </div>
+                    <span className={`text-xs font-medium ${getPasswordStrengthColor().includes('red') ? 'text-red-600' : getPasswordStrengthColor().includes('yellow') ? 'text-yellow-600' : getPasswordStrengthColor().includes('blue') ? 'text-blue-600' : 'text-green-600'}`}>
+                      {getPasswordStrengthText()}
                     </span>
-                  </div>
-                  <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
-                    <div 
-                      className={`h-2 rounded-full transition-all duration-300 ${passwordStrength.color}`}
-                      style={{ width: `${passwordStrength.strength}%` }}
-                    ></div>
                   </div>
                 </div>
               )}
@@ -246,7 +247,7 @@ export default function RegisterPage() {
             {/* Confirm Password Field */}
             <div>
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                Confirm Password
+                Confirm password
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -258,7 +259,7 @@ export default function RegisterPage() {
                   type={showConfirmPassword ? 'text' : 'password'}
                   autoComplete="new-password"
                   required
-                  className="block w-full pl-10 pr-12 py-3 border border-slate-300 dark:border-slate-600 rounded-xl bg-white/50 dark:bg-slate-700/50 backdrop-blur-sm placeholder-slate-500 dark:placeholder-slate-400 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                  className="block w-full pl-10 pr-12 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 placeholder-slate-500 dark:placeholder-slate-400 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                   placeholder="Confirm your password"
                   value={formData.confirmPassword}
                   onChange={handleChange}
@@ -278,16 +279,16 @@ export default function RegisterPage() {
               
               {/* Password Match Indicator */}
               {formData.confirmPassword && (
-                <div className="mt-2 flex items-center text-xs">
-                  {formData.password === formData.confirmPassword ? (
+                <div className="mt-2 flex items-center">
+                  {passwordsMatch ? (
                     <>
-                      <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400 mr-2" />
-                      <span className="text-green-600 dark:text-green-400">Passwords match</span>
+                      <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                      <span className="text-xs text-green-600 dark:text-green-400">Passwords match</span>
                     </>
                   ) : (
                     <>
-                      <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400 mr-2" />
-                      <span className="text-red-600 dark:text-red-400">Passwords don't match</span>
+                      <XCircle className="h-4 w-4 text-red-500 mr-2" />
+                      <span className="text-xs text-red-600 dark:text-red-400">Passwords don't match</span>
                     </>
                   )}
                 </div>
@@ -298,8 +299,8 @@ export default function RegisterPage() {
             <div>
               <button
                 type="submit"
-                disabled={loading}
-                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                disabled={loading || !formData.name.trim() || !formData.email.trim() || formData.password.length < 6 || !passwordsMatch}
+                className="w-full flex justify-center py-3 px-4 text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {loading ? (
                   <div className="flex items-center">
@@ -310,7 +311,7 @@ export default function RegisterPage() {
                   <div className="flex items-center">
                     <UserPlus className="h-5 w-5 mr-2" />
                     <span>Create account</span>
-                    <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight className="h-4 w-4 ml-2" />
                   </div>
                 )}
               </button>
@@ -322,7 +323,7 @@ export default function RegisterPage() {
                 <div className="w-full border-t border-slate-300 dark:border-slate-600" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white/70 dark:bg-slate-800/70 text-slate-500 dark:text-slate-400">
+                <span className="px-2 bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
                   Already have an account?
                 </span>
               </div>
@@ -344,14 +345,7 @@ export default function RegisterPage() {
         {/* Footer */}
         <div className="text-center">
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            By creating an account, you agree to our{' '}
-            <Link href="/terms" className="underline hover:text-slate-700 dark:hover:text-slate-300">
-              Terms of Service
-            </Link>{' '}
-            and{' '}
-            <Link href="/privacy" className="underline hover:text-slate-700 dark:hover:text-slate-300">
-              Privacy Policy
-            </Link>
+            By creating an account, you agree to our Terms of Service and Privacy Policy
           </p>
         </div>
       </div>
