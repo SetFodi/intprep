@@ -6,18 +6,26 @@ import { authOptions } from '@/lib/auth';
 
 export async function GET() {
   try {
+    console.log('[API] /api/user/stats - Start');
     const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!session) {
+      console.log('[API] No session found');
+      return NextResponse.json({ error: 'Unauthorized: No session' }, { status: 401 });
+    }
+    if (!session.user || !session.user.id) {
+      console.log('[API] No user or user.id in session', session.user);
+      return NextResponse.json({ error: 'Unauthorized: No user id' }, { status: 401 });
     }
 
     await connectToDatabase();
+    console.log('[API] Connected to database');
 
     // Get recent activities
     const recentActivity = await UserActivity.find({ userId: session.user.id })
       .sort({ createdAt: -1 })
       .limit(5)
       .lean();
+    console.log('[API] Recent activity:', recentActivity.length);
 
     // Calculate stats
     const [stats] = await UserActivity.aggregate([
@@ -36,17 +44,17 @@ export async function GET() {
         }
       }
     ]);
+    console.log('[API] Stats:', stats);
 
     // Calculate current streak
     const lastWeek = new Date();
     lastWeek.setDate(lastWeek.getDate() - 7);
-    
     const activityDates = await UserActivity.distinct('createdAt', {
       userId: session.user.id,
       createdAt: { $gte: lastWeek }
     });
-
     const currentStreak = activityDates.length;
+    console.log('[API] Current streak:', currentStreak);
 
     return NextResponse.json({
       stats: {
@@ -59,9 +67,15 @@ export async function GET() {
       recentActivity
     });
   } catch (error) {
-    console.error('Error fetching user stats:', error);
+    console.error('[API] Error fetching user stats:', error);
+    let details = '';
+    if (error instanceof Error) {
+      details = error.message;
+    } else {
+      details = String(error);
+    }
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Internal server error', details },
       { status: 500 }
     );
   }

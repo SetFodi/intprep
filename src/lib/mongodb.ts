@@ -6,6 +6,8 @@ if (!MONGODB_URI) {
   throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
 }
 
+console.log('MongoDB URI:', MONGODB_URI.replace(/:[^:@]+@/, ':****@')); // Log URI with password hidden
+
 interface MongooseCache {
   conn: typeof mongoose | null;
   promise: Promise<typeof mongoose> | null;
@@ -22,7 +24,10 @@ if (!cached) {
 }
 
 export async function connectToDatabase() {
+  console.log('Attempting to connect to MongoDB...');
+  
   if (cached.conn) {
+    console.log('Using cached MongoDB connection');
     return cached.conn;
   }
 
@@ -31,14 +36,22 @@ export async function connectToDatabase() {
       bufferCommands: false,
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
-      return mongoose;
-    });
+    console.log('Creating new MongoDB connection...');
+    cached.promise = mongoose.connect(MONGODB_URI!, opts)
+      .then((mongoose) => {
+        console.log('Successfully connected to MongoDB');
+        return mongoose;
+      })
+      .catch((error) => {
+        console.error('MongoDB connection error:', error);
+        throw error;
+      });
   }
 
   try {
     cached.conn = await cached.promise;
   } catch (e) {
+    console.error('Error in cached connection:', e);
     cached.promise = null;
     throw e;
   }

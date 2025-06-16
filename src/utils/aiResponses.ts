@@ -55,7 +55,7 @@ const generateFallbackResponse = (userMessage: string, stage: InterviewStage): s
 };
 
 export async function generateAIResponse(prompt: string): Promise<string> {
-  const API_KEY = process.env.HUGGINGFACE_API_KEY;
+  const API_KEY = process.env.NEXT_PUBLIC_HUGGINGFACE_API_KEY;
   
   if (!API_KEY) {
     console.error('Hugging Face API key not found in environment variables');

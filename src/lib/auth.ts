@@ -21,24 +21,29 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        await connectToDatabase();
+        try {
+          await connectToDatabase();
+          
+          const user = await User.findOne({ email: credentials.email });
+          if (!user) {
+            return null;
+          }
 
-        const user = await User.findOne({ email: credentials.email });
-        if (!user) {
+          // In a real app, you would verify the password hash here
+          // For now, we'll just check if the password matches
+          if (user.password !== credentials.password) {
+            return null;
+          }
+
+          return {
+            id: user._id.toString(),
+            email: user.email,
+            name: user.name
+          };
+        } catch (error) {
+          console.error('Auth error:', error);
           return null;
         }
-
-        // In a real app, you would verify the password hash here
-        // For now, we'll just check if the password matches
-        if (user.password !== credentials.password) {
-          return null;
-        }
-
-        return {
-          id: user._id.toString(),
-          email: user.email,
-          name: user.name
-        };
       }
     })
   ],
