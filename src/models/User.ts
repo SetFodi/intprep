@@ -1,18 +1,22 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
 
 const userSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
   name: {
     type: String,
-    required: true,
+    required: [true, 'Name is required'],
+  },
+  email: {
+    type: String,
+    required: [true, 'Email is required'],
+    unique: true,
+    lowercase: true,
+    trim: true,
   },
   password: {
     type: String,
-    required: true,
+    required: [true, 'Password is required'],
+    minlength: [6, 'Password must be at least 6 characters long'],
   },
   createdAt: {
     type: Date,
@@ -26,10 +30,30 @@ const userSchema = new mongoose.Schema({
   timestamps: true,
 });
 
-// Update the updatedAt timestamp before saving
+// Hash password before saving
+userSchema.pre('save', async function(next) {
+  if (!this.isModified('password')) return next();
+  
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (error: any) {
+    next(error);
+  }
+});
+
+// Update the updatedAt timestamp
 userSchema.pre('save', function(next) {
   this.updatedAt = new Date();
   next();
 });
 
-export default mongoose.models.User || mongoose.model('User', userSchema);
+// Method to compare passwords
+userSchema.methods.comparePassword = async function(candidatePassword: string) {
+  return bcrypt.compare(candidatePassword, this.password);
+};
+
+const User = mongoose.models.User || mongoose.model('User', userSchema);
+
+export default User;
