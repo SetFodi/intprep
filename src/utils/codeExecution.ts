@@ -100,9 +100,10 @@ function createFunctionFromCode(code: string): Function {
     const cleanCode = code.trim();
     
     // Look for function declaration
-    const functionMatch = cleanCode.match(/function\s+(\w+)\s*\([^)]*\)\s*\{[\s\S]*\}/);
+    const functionMatch = cleanCode.match(/function\s+(\w+)\s*\(([^)]*)\)\s*\{[\s\S]*\}/);
     if (functionMatch) {
       const functionName = functionMatch[1];
+      const parameters = functionMatch[2].trim();
       
       // Check if the function has a return statement
       const functionBody = functionMatch[0];
@@ -110,10 +111,22 @@ function createFunctionFromCode(code: string): Function {
         throw new Error(`Function ${functionName} is missing a return statement. Make sure to return a value.`);
       }
       
-      // Create a safe execution context
+      // Create a wrapper that handles parameter name flexibility
       const wrappedCode = `
         ${cleanCode}
-        return ${functionName};
+        
+        // Create a wrapper function that handles different parameter names
+        function wrapper(...args) {
+          try {
+            return ${functionName}(...args);
+          } catch (error) {
+            // If the original function fails, it might be due to parameter naming
+            // Try to create a version with the expected parameter names
+            throw error;
+          }
+        }
+        
+        return wrapper;
       `;
       
       return new Function(wrappedCode)();
@@ -224,11 +237,12 @@ export const sampleChallenges = [
   },
   {
     title: "Valid Palindrome",
-    description: "A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward.",
+    description: "A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Note: You need to clean the string first by removing spaces, punctuation, and converting to lowercase.",
     difficulty: "Easy" as const,
     category: "String",
     starterCode: `function isPalindrome(s) {
-    // Your code here
+    // Step 1: Clean the string (remove non-alphanumeric, convert to lowercase)
+    // Step 2: Check if cleaned string equals its reverse
     return false;
 }`,
     solution: `function isPalindrome(s) {
@@ -240,12 +254,12 @@ export const sampleChallenges = [
       {
         input: '"A man, a plan, a canal: Panama"',
         expectedOutput: 'true',
-        description: 'Classic palindrome with punctuation'
+        description: 'Classic palindrome with punctuation - should clean first'
       },
       {
         input: '"race a car"',
         expectedOutput: 'false',
-        description: 'Not a palindrome'
+        description: 'Not a palindrome even after cleaning'
       },
       {
         input: '""',

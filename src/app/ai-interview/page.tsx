@@ -95,6 +95,23 @@ export default function AIInterview() {
         content: "Hi! I'm your AI interview coach. I'll be conducting a mock interview today. Let's start with a brief introduction. Could you tell me about yourself and your background?"
       }
     ]);
+    
+    // Track the start of the interview session
+    fetch('/api/user/usage', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        sessionId: newSessionId,
+        action: 'interview_started'
+      }),
+    }).then(() => {
+      // Refresh usage data after starting interview
+      fetchUsage();
+    }).catch(error => {
+      console.error('Error tracking interview start:', error);
+    });
   };
 
   const endInterview = () => {

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
-import { User } from '@/models/User';
 import { getServerSession } from 'next-auth';
 import { connectToDatabase } from '@/lib/mongodb';
 import { authOptions } from '@/lib/auth';
@@ -27,7 +26,9 @@ export async function GET() {
       dailyLimit: DAILY_LIMIT,
       usedToday: usageCount,
       remainingToday: remainingUses,
-      canUseAI: remainingUses > 0
+      canUseAI: remainingUses > 0,
+      daily_interviews: usageCount, // For backward compatibility
+      last_interview_date: userUsage?.date === today ? today : null
     });
   } catch (error) {
     console.error('Error fetching usage:', error);

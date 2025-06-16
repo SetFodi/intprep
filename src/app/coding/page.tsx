@@ -53,6 +53,39 @@ export default function CodingPage() {
     setResult(executionResult);
   };
 
+  const submitChallenge = async () => {
+    if (!result || !result.success) {
+      alert('Please run your code first and ensure it passes the tests.');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/user/activity', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          type: 'coding_challenge',
+          category: currentChallenge.category,
+          details: `Completed ${currentChallenge.title}`,
+          score: result.score,
+          duration: Math.round((currentChallenge.timeLimit * 60 - timeLeft) / 60), // Time spent in minutes
+        }),
+      });
+
+      if (response.ok) {
+        alert(`Challenge submitted! Score: ${result.score}%`);
+      } else {
+        console.error('Failed to submit challenge');
+        alert('Failed to submit challenge. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error submitting challenge:', error);
+      alert('Error submitting challenge. Please try again.');
+    }
+  };
+
   const switchChallenge = (index: number) => {
     const newChallenge = sampleChallenges[index];
     setCurrentChallenge(newChallenge);
@@ -191,13 +224,24 @@ export default function CodingPage() {
               <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-medium text-slate-900 dark:text-white">Code Editor</h3>
-                  <button
-                    onClick={runCode}
-                    className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors"
-                  >
-                    <Play className="h-4 w-4 mr-2" />
-                    Run Code
-                  </button>
+                  <div className="flex space-x-3">
+                    <button
+                      onClick={runCode}
+                      className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors"
+                    >
+                      <Play className="h-4 w-4 mr-2" />
+                      Run Code
+                    </button>
+                    {result && result.success && (
+                      <button
+                        onClick={submitChallenge}
+                        className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 transition-colors"
+                      >
+                        <CheckCircle className="h-4 w-4 mr-2" />
+                        Submit Challenge
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
               
